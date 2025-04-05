@@ -21,18 +21,18 @@
         <div class="col-md-6">
             @include('profile.partials.update-password-form')
         </div>
-        <div class="col-md-6">
+        {{-- <div class="col-md-6">
             @include('profile.partials.two-factor-authentication-form')
-        </div>
+        </div> --}}
     </div>
 @endsection
 @section('page-script')
-    <script src="{{asset('assets/js/pages/password-addon.init.js')}}"></script>
+    <script src="{{ asset('assets/js/pages/password-addon.init.js') }}"></script>
     <script>
-        @if(session('status') == 'two-factor-authentication-enabled')
-        notify('success', "Two factor authentication has been enabled.");
-        @elseif(session('status') == 'two-factor-authentication-disabled')
-        notify('error', "Two factor authentication has been disabled.");
+        @if (session('status') == 'two-factor-authentication-enabled')
+            notify('success', "Two factor authentication has been enabled.");
+        @elseif (session('status') == 'two-factor-authentication-disabled')
+            notify('error', "Two factor authentication has been disabled.");
         @endif
     </script>
 @endsection
