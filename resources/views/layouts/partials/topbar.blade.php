@@ -146,12 +146,6 @@
                         class="align-middle bi bi-moon-stars me-2"></i> Auto (system default)</a>
             </div>
         </div>
-        {{-- <div class="ms-1 header-item d-none d-sm-flex">
-            <a href="{{ route('home') }}" class="btn btn-icon btn-topbar btn-ghost-dark rounded-circle"
-               data-bs-toggle="tooltip" data-bs-title="Visit Site">
-                <i class="bi bi-globe fs-3xl"></i>
-            </a>
-        </div> --}}
 
         <div class="dropdown ms-sm-3 header-item topbar-user">
             <button type="button" class="shadow-none btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
@@ -193,28 +187,3 @@
         margin-left: -6px;
     }
 </style>
-<script>
-    $(document).ready(function() {
-        $('#logoutForm').on('submit', function(e) {
-            e.preventDefault();
-            let formData = new FormData(this);
-
-            $.ajax({
-                url: "{{ route('logout') }}",
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    notify('success', 'Logged out successfully');
-                    setTimeout(() => {
-                        window.location.href = "{{ route('login') }}";
-                    }, 1000);
-                },
-                error: function(xhr, status, error) {
-                    notify('error', error);
-                }
-            });
-        });
-    });
-</script>
