@@ -47,7 +47,14 @@
                         <span data-key="t-dashboards">Schedules</span>
                     </a>
                 </li>
-
+                <li class="nav-item">
+                    <a href="{{ route('technicians.index') }}"
+                        class="nav-link menu-link @if (Route::current()->getName() == 'technicians.index') active @endif"
+                        aria-expanded="false">
+                        <i class="ph ph-gear"></i>
+                        <span data-key="t-dashboards">Technicians</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

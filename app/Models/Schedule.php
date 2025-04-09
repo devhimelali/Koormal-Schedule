@@ -11,5 +11,6 @@ class Schedule extends Model
         'department',
         'description',
         'next_due_date',
+        'status',
     ];
 }

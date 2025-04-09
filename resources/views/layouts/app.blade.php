@@ -71,6 +71,9 @@
                 @hasrole('user')
                     @include('user.partials.sidebar')
                 @endhasrole
+                @hasrole('technician')
+                    @include('technician.partials.sidebar')
+                @endhasrole
                 <!-- Sidebar -->
             </div>
 

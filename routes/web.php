@@ -1,17 +1,36 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RedirectController;
-use App\Models\User;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TechniciansController;
+use App\Http\Controllers\User\ScheduleController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [RedirectController::class, 'redirect'])->name('redirect')->middleware('auth');
 Route::get('{role}/profile', [ProfileController::class, 'show'])->name('profile.show');
 
-// Route::get('/', function () {
-//     return view('welcome');
-// })->name('home');
+// ===================== Route for admin, user =====================
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Schedules routes
+    Route::resource('schedules', ScheduleController::class);
+    Route::get('schedules/export/pdf', [ScheduleController::class, 'exportPdf'])->name('schedules.export.pdf');
+    Route::post('schedules/email', [ScheduleController::class, 'sendEmail'])->name('schedules.email');
+
+    // Technicians route with different middleware based on role
+    Route::prefix('technicians')->group(function () {
+        // For admin and user roles
+        Route::middleware(['role:admin|user'])->get('/', [TechniciansController::class, 'index'])->name('technicians.index');
+
+        // For technician role with password confirmation
+        Route::middleware(['role:technician', 'password.confirm'])->get('/with-confirmation', [TechniciansController::class, 'index'])->name('technicians.index.confirm');
+    });
+});
+
+Route::post('technicians/change-status', [TechniciansController::class, 'changeStatus'])->name('technicians.change.status')->middleware(['auth', 'role:admin|technician', 'verified']);
 
 Route::get('run-job', function () {
     Artisan::call('queue:work');

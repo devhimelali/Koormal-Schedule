@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('department');
             $table->text('description');
             $table->string('next_due_date');
+            $table->enum('status', ['delivered', 'work underway', 'tagged out – further work found', 'work completed, ready for pickup', 'no show', 'not yet touched'])->default('not yet touched');
             $table->timestamps();
         });
     }

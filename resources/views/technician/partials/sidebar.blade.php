@@ -1,7 +1,7 @@
 <div class="app-menu navbar-menu">
     <!-- LOGO -->
     <div class="navbar-brand-box">
-        <a href="{{ route('admin.dashboard') }}" class="logo logo-dark">
+        <a href="{{ route('technician.dashboard') }}" class="logo logo-dark">
             <span class="logo-sm">
                 <img src="{{ asset('assets/images/4emus.png') }}" alt="logo" height="50">
             </span>
@@ -9,7 +9,7 @@
                 <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="50">
             </span>
         </a>
-        <a href="{{ route('admin.dashboard') }}" class="logo logo-light">
+        <a href="{{ route('user.dashboard') }}" class="logo logo-light">
             <span class="logo-sm">
                 <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="50">
             </span>
@@ -32,11 +32,11 @@
 
                 <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.dashboard') }}"
-                        class="nav-link menu-link @if (Route::current()->getName() == 'admin.dashboard') active @endif"
+                    <a href="{{ route('technician.dashboard') }}"
+                        class="nav-link menu-link @if (Route::current()->getName() == 'user.dashboard') active @endif"
                         aria-expanded="false">
                         <i class="ph-gauge"></i>
-                        <span data-key="t-dashboard">Dashboard</span>
+                        <span data-key="t-dashboards">Dashboard</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -48,14 +48,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('technicians.index') }}"
-                        class="nav-link menu-link @if (Route::current()->getName() == 'technicians.index') active @endif"
+                    <a href="{{ route('technicians.index.confirm') }}"
+                        class="nav-link menu-link @if (Route::current()->getName() == 'technicians.index.confirm') active @endif"
                         aria-expanded="false">
                         <i class="ph ph-gear"></i>
                         <span data-key="t-dashboards">Technicians</span>
                     </a>
                 </li>
-
             </ul>
         </div>
         <!-- Sidebar -->
