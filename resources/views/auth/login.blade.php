@@ -9,32 +9,33 @@
                     <div class="card mb-0 border-0 shadow-none">
                         <div class="card-body p-sm-5">
                             <div class="text-center">
+                                <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="36" class="mb-2">
                                 <h5 class="fs-3xl">Welcome Back</h5>
-                                <p class="text-muted">Sign in to continue to {{env('APP_NAME')}}</p>
+                                <p class="text-muted">Sign in to continue to {{ env('APP_NAME') }}</p>
                             </div>
                             <div class="p-2 mt-2">
-                                <form action="{{route('login')}}" method="post" id="loginForm">
+                                <form action="{{ route('login') }}" method="post" id="loginForm">
                                     @csrf
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email <span
                                                 class="text-danger">*</span></label>
                                         <div class="position-relative ">
-                                            <input type="email" class="form-control  password-input"
-                                                   name="email" id="email" placeholder="Enter email">
+                                            <input type="email" class="form-control  password-input" name="email"
+                                                id="email" placeholder="Enter email">
                                             <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
 
                                     <div class="mb-3">
                                         <div class="float-end">
-                                            <a href="{{route('password.request')}}" class="text-muted">Forgot
+                                            <a href="{{ route('password.request') }}" class="text-muted">Forgot
                                                 password?</a>
                                         </div>
                                         <label class="form-label" for="password-input">Password <span
                                                 class="text-danger">*</span></label>
                                         <div class="position-relative auth-pass-inputgroup mb-3">
                                             <input type="password" class="form-control pe-5 password-input "
-                                                   placeholder="Enter password" name="password" id="password-input">
+                                                placeholder="Enter password" name="password" id="password-input">
                                             <button
                                                 class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
                                                 type="button" id="password-addon"><i
@@ -44,8 +45,7 @@
                                     </div>
 
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="remember"
-                                               id="remember">
+                                        <input class="form-check-input" type="checkbox" name="remember" id="remember">
                                         <label class="form-check-label" for="remember">Remember
                                             me</label>
                                     </div>
@@ -58,8 +58,8 @@
 
                                 <div class="text-center mt-4">
                                     <p class="mb-0">Don't have an account ?
-                                        <a href="{{route('register')}}"
-                                           class="fw-semibold text-secondary text-decoration-underline">
+                                        <a href="{{ route('register') }}"
+                                            class="fw-semibold text-secondary text-decoration-underline">
                                             SignUp</a>
                                     </p>
                                 </div>
@@ -75,8 +75,8 @@
 @endsection
 @section('page-script')
     <script>
-        $(document).ready(function () {
-            $('#loginForm').on('submit', function (e) {
+        $(document).ready(function() {
+            $('#loginForm').on('submit', function(e) {
                 e.preventDefault();
                 let formData = new FormData(this);
                 $.ajax({
@@ -86,18 +86,21 @@
                     dataType: 'json',
                     contentType: false,
                     processData: false,
-                    beforeSend: function () {
+                    beforeSend: function() {
                         $('.is-invalid').removeClass('is-invalid');
                         $('.invalid-feedback').text('');
                         $('#submitBtn').attr('disabled', true);
-                        $('#submitBtn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...');
+                        $('#submitBtn').html(
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...'
+                        );
                     },
-                    success: function (response) {
+                    success: function(response) {
                         console.log(response);
                         notify('success', 'Logged in successfully');
                         if (response.two_factor) {
                             setTimeout(() => {
-                                window.location.href = "{{ route('two-factor.login') }}";
+                                window.location.href =
+                                    "{{ route('two-factor.login') }}";
                             }, 1000);
                         } else {
                             setTimeout(() => {
@@ -105,28 +108,31 @@
                             }, 1000);
                         }
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         if (xhr.status == 422) {
                             let errors = xhr.responseJSON.errors;
-                            $.each(errors, function (key, value) {
+                            $.each(errors, function(key, value) {
                                 notify('error', value);
                                 let input = $('[name="' + key + '"]');
                                 input.addClass('is-invalid');
                                 if (input.closest('.auth-pass-inputgroup').length) {
-                                    input.closest('.auth-pass-inputgroup').find('.invalid-feedback').text(value);
+                                    input.closest('.auth-pass-inputgroup').find(
+                                        '.invalid-feedback').text(value);
                                 } else {
                                     input.next('.invalid-feedback').text(value);
                                 }
                             });
                         } else if (xhr.status === 429) {
-                            notify('error', 'Too many failed attempts. Please try again later.');
+                            notify('error',
+                                'Too many failed attempts. Please try again later.');
                         } else if (xhr.status === 500) {
-                            notify('error', 'Something went wrong on our end. Please try again later.');
+                            notify('error',
+                                'Something went wrong on our end. Please try again later.');
                         } else {
                             notify('error', error);
                         }
                     },
-                    complete: function () {
+                    complete: function() {
                         $('#submitBtn').attr('disabled', false);
                         $('#submitBtn').html('Sign In');
                     }

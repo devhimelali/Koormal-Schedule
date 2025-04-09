@@ -50,12 +50,7 @@ class ScheduleController extends Controller
             ->distinct()
             ->pluck('asset_no');
 
-        $time_frames = AssetTimeFrame::select('time_frame')
-            ->distinct()
-            ->orderByRaw('CAST(time_frame AS UNSIGNED) ASC')
-            ->pluck('time_frame');
-
-        return view('user.schedule.index', compact('assets', 'departments', 'time_frames'));
+        return view('user.schedule.index', compact('assets', 'departments'));
     }
 
     public function exportPdf(Request $request)
@@ -133,11 +128,6 @@ class ScheduleController extends Controller
         $schedules = $schedules->get();
         foreach ($emailArray as $email) {
             dispatch(new SendScheduleEmailJob($email, $request->subject, $request->message, $schedules));
-            // Mail::to($email)->send(new ScheduleListMail(
-            //     $request->subject,
-            //     $request->message,
-            //     $schedules
-            // ));
         }
 
         return response()->json(['status' => 'success', 'message' => 'Email sent successfully']);

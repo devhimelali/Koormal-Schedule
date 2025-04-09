@@ -39,9 +39,8 @@
                         <div>
                             <select name="time_frame" id="time_frame" class="form-control">
                                 <option value="">Select Time Frame</option>
-                                @foreach ($time_frames as $time_frame)
-                                    <option value="{{ $time_frame }}">{{ $time_frame }}</option>
-                                @endforeach
+                                <option value="1">1</option>
+                                <option value="7">7</option>
                             </select>
                         </div>
                         <div>

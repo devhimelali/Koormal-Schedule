@@ -2,23 +2,23 @@
     <!-- LOGO -->
     <div class="navbar-brand-box">
         <a href="{{ route('admin.dashboard') }}" class="logo logo-dark">
-                <span class="logo-sm">
-                    <img src="{{ asset('assets/images/logo.png') }}" alt="logo" height="36">
-                </span>
+            <span class="logo-sm">
+                <img src="{{ asset('assets/images/4emus.png') }}" alt="logo" height="50">
+            </span>
             <span class="logo-lg">
-                    <img src="{{ asset('assets/images/logo.png') }}" alt="" height="36">
-                </span>
+                <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="50">
+            </span>
         </a>
         <a href="{{ route('admin.dashboard') }}" class="logo logo-light">
-                <span class="logo-sm">
-                    <img src="{{ asset('assets/images/logo.png') }}" alt="" height="22">
-                </span>
+            <span class="logo-sm">
+                <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="50">
+            </span>
             <span class="logo-lg">
-                    <img src="{{ asset('assets/images/logo.png') }}" alt="" height="22">
-                </span>
+                <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="50">
+            </span>
         </a>
         <button type="button" class="btn btn-sm p-0 fs-3xl header-item float-end btn-vertical-sm-hover"
-                id="vertical-hover">
+            id="vertical-hover">
             <i class="ri-record-circle-line"></i>
         </button>
     </div>
@@ -33,8 +33,8 @@
                 <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                 <li class="nav-item">
                     <a href="{{ route('admin.dashboard') }}"
-                       class="nav-link menu-link @if (Route::current()->getName() == 'admin.dashboard') active @endif"
-                       aria-expanded="false">
+                        class="nav-link menu-link @if (Route::current()->getName() == 'admin.dashboard') active @endif"
+                        aria-expanded="false">
                         <i class="ph-gauge"></i>
                         <span data-key="t-dashboard">Dashboard</span>
                     </a>

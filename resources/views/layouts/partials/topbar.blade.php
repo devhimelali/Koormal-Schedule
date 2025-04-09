@@ -4,19 +4,19 @@
         <div class="navbar-brand-box horizontal-logo">
             <a href="{{ route('redirect') }}" class="logo logo-dark">
                 <span class="logo-sm">
-                    <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
+                    <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="22">
                 </span>
                 <span class="logo-lg">
-                    <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="22">
+                    <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="22">
                 </span>
             </a>
 
             <a href="{{ route('redirect') }}" class="logo logo-light">
                 <span class="logo-sm">
-                    <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
+                    <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="22">
                 </span>
                 <span class="logo-lg">
-                    <img src="{{ asset('assets/images/logo-light.png') }}" alt="" height="22">
+                    <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="22">
                 </span>
             </a>
         </div>
@@ -152,7 +152,7 @@
                 aria-haspopup="true" aria-expanded="false">
                 <span class="d-flex align-items-center">
                     <img class="rounded-circle header-profile-user"
-                        src="{{ asset('assets/images/users/32/avatar-1.jpg') }}" alt="Header Avatar">
+                        src="{{ asset('assets/images/users/32/avatar-3.jpg') }}" alt="Header Avatar">
                     <span class="text-start ms-xl-2">
                         <span
                             class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ auth()->user()->name }}</span>
@@ -168,9 +168,9 @@
                     href="{{ route('profile.show', auth()->user()->roles->pluck('name')->first()) }}"><i
                         class="align-middle mdi mdi-account-circle text-muted fs-lg me-1"></i> <span
                         class="align-middle">Profile</span></a>
-                <a class="dropdown-item" href="pages-profile-settings.html"><i
+                {{-- <a class="dropdown-item" href="pages-profile-settings.html"><i
                         class="align-middle mdi mdi-cog-outline text-muted fs-lg me-1"></i> <span
-                        class="align-middle">Settings</span></a>
+                        class="align-middle">Settings</span></a> --}}
                 <form action="{{ route('logout') }}" method="post" class="dropdown-item" id="logoutForm">
                     @csrf
                     <i class="align-middle mdi mdi-logout text-muted fs-lg me-1"></i>

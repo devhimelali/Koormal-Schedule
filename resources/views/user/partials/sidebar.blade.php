@@ -3,18 +3,18 @@
     <div class="navbar-brand-box">
         <a href="{{ route('user.dashboard') }}" class="logo logo-dark">
             <span class="logo-sm">
-                <img src="{{ asset('assets/images/logo.png') }}" alt="logo" height="36">
+                <img src="{{ asset('assets/images/4emus.png') }}" alt="logo" height="50">
             </span>
             <span class="logo-lg">
-                <img src="{{ asset('assets/images/logo.png') }}" alt="" height="36">
+                <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="50">
             </span>
         </a>
         <a href="{{ route('user.dashboard') }}" class="logo logo-light">
             <span class="logo-sm">
-                <img src="{{ asset('assets/images/logo.png') }}" alt="" height="22">
+                <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="50">
             </span>
             <span class="logo-lg">
-                <img src="{{ asset('assets/images/logo.png') }}" alt="" height="22">
+                <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="50">
             </span>
         </a>
         <button type="button" class="btn btn-sm p-0 fs-3xl header-item float-end btn-vertical-sm-hover"
@@ -43,7 +43,7 @@
                     <a href="{{ route('schedules.index') }}"
                         class="nav-link menu-link @if (Route::current()->getName() == 'schedules.index') active @endif"
                         aria-expanded="false">
-                        <i class="ph-gauge"></i>
+                        <i class="ph-clock-clockwise"></i>
                         <span data-key="t-dashboards">Schedules</span>
                     </a>
                 </li>
