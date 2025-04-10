@@ -18,7 +18,45 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex align-items-center">
-                    <h5 class="card-title mb-0 flex-grow-1">Technicians List</h5>
+                    <h5 class="card-title mb-0 flex-grow-1">Today Asset List</h5>
+                    <div>
+                        <p class="mb-1"><span class="fw-semibold mb-0">Status:</span></p>
+                        <ul class="unstyled-list list-inline mb-0 d-flex align-items-center gap-2">
+                            <li>
+                                <span
+                                    style="background-color: #ffffff; padding: 4px 8px; border-radius: 2px; border: 1px solid #000;">Not
+                                    yet
+                                    touched</span>
+                            </li>
+                            <li>
+                                <span
+                                    style="background-color: #ff00ff; padding: 4px 8px; border-radius: 2px;border: 1px solid #000;">No
+                                    show</span>
+                            </li>
+                            <li>
+                                <span
+                                    style="background-color: #ffff00; padding: 4px 8px; border-radius: 2px;border: 1px solid #000;">Work
+                                    underway</span>
+                            </li>
+                            <li>
+                                <span
+                                    style="background-color: #ff0000; padding: 4px 8px; border-radius: 2px;border: 1px solid #000;">Tagged
+                                    out –
+                                    further work found</span>
+                            </li>
+                            <li>
+                                <span
+                                    style="background-color: #00ffff; padding: 4px 8px; border-radius: 2px;border: 1px solid #000;">Work
+                                    completed,
+                                    ready for pickup</span>
+                            </li>
+                            <li>
+                                <span
+                                    style="background-color: #00ff00; padding: 4px 8px; border-radius: 2px;border: 1px solid #000;">Delivered</span>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -30,7 +68,6 @@
                                     <th>Description</th>
                                     <th>Department</th>
                                     <th>Next Due Date</th>
-                                    <th>Status</th>
                                     @role('admin|technician')
                                         <th>Action</th>
                                     @endrole
@@ -118,10 +155,6 @@
                     data: 'next_due_date',
                     name: 'next_due_date'
                 },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
             ];
 
             if (isAdmin || isTechnician) {
@@ -144,19 +177,24 @@
                     let status = data.status?.toLowerCase();
                     switch (status) {
                         case 'delivered':
-                            $(row).css('background-color', '#d4edda');
+                            $(row).css('background-color', '#00ff00');
+                            $(row).find('td').css('color', '#ffffff');
                             break;
                         case 'work underway':
-                            $(row).css('background-color', '#fff3cd');
+                            $(row).css('background-color', '#ffff00');
+                            $(row).find('td').css('color', '#ffffff');
                             break;
                         case 'tagged out – further work found':
-                            $(row).css('background-color', '#f8d7da');
+                            $(row).css('background-color', '#ff0000');
+                            $(row).find('td').css('color', '#ffffff');
                             break;
                         case 'work completed, ready for pickup':
-                            $(row).css('background-color', '#d1ecf1');
+                            $(row).css('background-color', '#00ffff');
+                            $(row).find('td').css('color', '#000');
                             break;
                         case 'no show':
-                            $(row).css('background-color', '#f8d7f8');
+                            $(row).css('background-color', '#ff00ff');
+                            $(row).find('td').css('color', '#ffffff');
                             break;
                         case 'not yet touched':
                         default:
