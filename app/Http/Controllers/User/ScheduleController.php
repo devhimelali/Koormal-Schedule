@@ -20,7 +20,7 @@ class ScheduleController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Schedule::query();
+            $data = Schedule::where('is_technician_entry', 0);
 
             if (!empty($request->department)) {
                 $data = $data->where('department', $request->department);

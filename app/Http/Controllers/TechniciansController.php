@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\WorkStatusNotifyMail;
 use Carbon\Carbon;
+use App\Models\Asset;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
+use App\Mail\WorkStatusNotifyMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -31,12 +32,23 @@ class TechniciansController extends Controller
                         }
                     }
                     $assetEmails = implode(', ', $emailList);
-                    $btn = '<a href="javascript:void(0)" class="changeStatus btn btn-primary btn-sm" data-id="' . $row->id . '" data-status="' . $row->status . '">
-                    <i class="ri-edit-line"></i>
+                    $btn = '<div class="btn-group" role="group">';
+                    $btn .= '<a href="javascript:void(0)" class="changeStatus btn btn-primary btn-sm" data-id="' . $row->id . '" data-status="' . $row->status . '">
+                    <i class="ri-pencil-ruler-line"></i>
                     Change Status</a>
                     <a href="javascript:void(0)" class="btn btn-secondary btn-sm sendEmail" data-asset_emails="' . $assetEmails . '" data-asset_no="' . $row->asset_no . '" data-status="' . $row->status . '" data-next_due_date="' . $row->next_due_date . '">
                     <i class="ri-mail-send-line"></i>
                     Send Email</a>';
+
+                    if ($row->is_technician_entry) {
+                        $btn .= '<a href="javascript:void(0)" class="editAsset btn btn-warning btn-sm" data-id="' . $row->id . '">
+                        <i class="ri-edit-line"></i>
+                        Edit</a>';
+                        $btn .= '<a href="javascript:void(0)" class="deleteAsset btn btn-danger btn-sm" data-id="' . $row->id . '">
+                        <i class="ri-delete-bin-line"></i>
+                        Delete</a>';
+                    }
+                    $btn .= '</div>';
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -117,6 +129,84 @@ class TechniciansController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Email sent successfully.'
+        ]);
+    }
+
+    public function addAsset(Request $request)
+    {
+        $request->validate([
+            'asset_no' => 'required',
+            'description' => 'required',
+            'next_due_date' => 'required',
+        ]);
+
+        Asset::create([
+            'asset_no' => $request->asset_no,
+            'description' => $request->description,
+            'department' => $request->department,
+            'next_due_date' => $request->next_due_date,
+            'is_technician_entry' => 1,
+        ]);
+
+        Schedule::create([
+            'asset_no' => $request->asset_no,
+            'description' => $request->description,
+            'department' => $request->department,
+            'next_due_date' => $request->next_due_date,
+            'status' => 'not yet touched',
+            'is_today_works' => 1,
+            'is_technician_entry' => 1,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Asset added successfully.'
+        ]);
+    }
+
+    public function editAsset($id)
+    {
+        $asset = Schedule::find($id);
+        if (!$asset) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Asset not found.'
+            ]);
+        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $asset
+        ]);
+    }
+
+    public function updateAsset(Request $request, $id)
+    {
+        $request->validate([
+            'asset_no' => 'required',
+            'description' => 'required',
+            'next_due_date' => 'required',
+        ]);
+
+        $schedule = Schedule::find($id);
+        $schedule->asset_no = $request->asset_no;
+        $schedule->description = $request->description;
+        $schedule->department = $request->department;
+        $schedule->next_due_date = $request->next_due_date;
+        $schedule->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Asset updated successfully.'
+        ]);
+    }
+
+    public function deleteAsset($id)
+    {
+        $schedule = Schedule::find($id);
+        $schedule->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Asset deleted successfully.'
         ]);
     }
 }

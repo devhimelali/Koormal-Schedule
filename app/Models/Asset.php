@@ -13,6 +13,7 @@ class Asset extends Model
         'department',
         'description',
         'next_due_date',
+        'is_technician_entry',
     ];
 
     public function assetEmails(): HasMany

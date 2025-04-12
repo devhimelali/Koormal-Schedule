@@ -13,6 +13,8 @@ class Schedule extends Model
         'description',
         'next_due_date',
         'status',
+        'is_today_works',
+        'is_technician_entry',
     ];
 
     public function asset(): BelongsTo

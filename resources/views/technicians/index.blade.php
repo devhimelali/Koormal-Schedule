@@ -23,7 +23,7 @@
                             <i class="ri-refresh-line align-bottom"></i>
                             Today's Work
                         </button>
-                        <button class="btn btn-sm btn-secondary">
+                        <button class="btn btn-sm btn-secondary" id="addAsset">
                             <i class="ri-add-line align-bottom"></i>
                             Add Asset
                         </button>
@@ -77,7 +77,7 @@
                                     <th>Department</th>
                                     <th>Next Due Date</th>
                                     @role('admin|technician')
-                                        <th style="max-width: 230px; width: 230px;">Action</th>
+                                        <th style="max-width: 355px; width: 355px;">Action</th>
                                     @endrole
                                 </tr>
                             </thead>
@@ -123,7 +123,7 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    <!-- Email Modal -->
+    <!-- Email Modal Start -->
     <div id="sendEmailModal" class="modal fade" data-bs-backdrop="static" tabindex="-1" aria-labelledby="myModalLabel"
         aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-lg">
@@ -159,19 +159,106 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    <!-- Email Modal End -->
+    <!-- Asset Modal Start -->
+    <div id="addAssetModal" class="modal fade" data-bs-backdrop="static" tabindex="-1" aria-labelledby="myModalLabel"
+        aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Create a New Asset</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                </div>
+                <form action="{{ route('technician.add.asset') }}" method="post" id="addAssetForm">
+                    @csrf
+                    <input type="hidden" name="_method" value="POST" id="method">
+                    <div class="modal-body">
+                        <div class="mb-2">
+                            <label for="asset_no" class="form-label">Asset Number <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="asset_no" name="asset_no"
+                                placeholder="Enter asset number">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="mb-2">
+                            <label for="department" class="form-label">Department</label>
+                            <input type="text" class="form-control" id="department" name="department"
+                                placeholder="Enter department">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="mb-2">
+                            <label for="next_due_date" class="form-label">Next Due Date</label>
+                            <input type="text" class="form-control" id="next_due_date" name="next_due_date">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div>
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" placeholder="Description" rows="7"></textarea>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="addAssetSubmitBtn">Save</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <!-- Asset Modal End -->
+    <!-- Asset Delete Modal Start -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" style="display: none;"
+        aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Asset</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        id="close-modal"></button>
+                </div>
+
+                <form class="tablelist-form" action="" method="POST" id="deleteForm">
+                    @csrf
+                    <input type="hidden" name="_method" value="DELETE">
+                    <div class="modal-body p-4">
+                        <p id="deleteMessage">Are you sure you want to delete this asset?</p>
+                    </div>
+                    <div class="modal-footer" style="display: block;">
+                        <div class="hstack gap-2 justify-content-end">
+                            <button type="button" class="btn btn-ghost-danger" data-bs-dismiss="modal"><i
+                                    class="bi bi-x-lg align-baseline me-1"></i> Close
+                            </button>
+                            <button type="submit" class="btn btn-danger" id="deleteBtn">Delete</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- modal-content -->
+        </div>
+        <!-- modal-dialog -->
+    </div>
+    <!-- Asset Delete Modal End -->
 @endsection
 @section('vendor-style')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/cdn/datatables/dataTables.bootstrap5.min.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('assets/libs/select2/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}">
 @endsection
 @section('vendor-script')
     <script src="{{ asset('assets/cdn/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/cdn/datatables/dataTables.bootstrap5.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{{ asset('assets/libs/select2/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/flatpickr/flatpickr.min.js') }}"></script>
 @endsection
 @section('page-script')
     <script>
         $(document).ready(function() {
+            $('#next_due_date').flatpickr({
+                enableTime: false,
+                dateFormat: "d-m-Y",
+                defaultDate: "today"
+            });
+
             $('#emails').select2({
                 tags: true,
                 placeholder: "Select or add email(s)",
@@ -431,6 +518,145 @@
                     }
                 });
             });
+
+            $('#addAsset').on('click', function() {
+                $('#addAssetModal').modal('show');
+            });
+
+            $('#addAssetModal').on('hidden.bs.modal', function() {
+                $('#addAssetForm')[0].reset();
+                $('#method').val('POST');
+                $('#addAssetModal .modal-title').text('Create a New Asset');
+                $('#addAssetForm').attr('action', "{{ route('technician.add.asset') }}");
+                $('#next_due_date').flatpickr({
+                    enableTime: false,
+                    dateFormat: 'd-m-Y',
+                    defaultDate: 'today'
+                });
+            });
+
+            $('#addAssetForm').on('submit', function(e) {
+                e.preventDefault();
+                let formData = new FormData(this);
+                let url = $(this).attr('action');
+                let method = $(this).attr('method');
+                $.ajax({
+                    url: url,
+                    method: method,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function() {
+                        $('#addAssetSubmitBtn').attr('disabled', true);
+                        $('#addAssetSubmitBtn').html(
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...'
+                        );
+                    },
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            table.ajax.reload();
+                            notify('success', response.message);
+                            $('#addAssetModal').modal('hide');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status == 422) {
+                            let errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, value) {
+                                notify('error', value);
+                                let input = $('[name="' + key + '"]');
+                                input.addClass('is-invalid');
+                                input.next('.invalid-feedback').text(value);
+                            });
+                        } else {
+                            notify('error',
+                                'Something went wrong on our end. Please try again later.');
+                        }
+
+                    },
+                    complete: function() {
+                        $('#addAssetSubmitBtn').attr('disabled', false);
+                        $('#addAssetSubmitBtn').html('Add Asset');
+                    }
+                });
+            });
+
+            $('body').on('click', '.deleteAsset', function() {
+                let id = $(this).data('id');
+                $('#deleteForm').attr('action', "{{ route('technician.delete.asset', ':id') }}".replace(
+                    ':id', id));
+                $('#deleteModal').modal('show');
+            });
+
+            // Handle form submission
+            $('#deleteForm').submit(function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var url = form.attr('action');
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: form.serialize(),
+                    beforeSend: function() {
+                        $('#deleteBtn').prop('disabled', true);
+                        $('#deleteBtn').html(
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...'
+                        );
+                    },
+                    success: function(response) {
+                        $('#deleteModal').modal('hide');
+                        table.ajax.reload();
+                        notify('success', response.message);
+                    },
+                    error: function(xhr) {
+                        let errors = xhr.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            notify('error', value);
+                        });
+                    },
+                    complete: function() {
+                        $('#deleteBtn').prop('disabled', false);
+                        $('#deleteBtn').html('Delete');
+                    }
+                });
+            });
+
+            $('body').on('click', '.editAsset', function() {
+                let id = $(this).data('id');
+                $('#loader').show();
+
+                $.get("{{ route('technician.edit.asset', ':id') }}".replace(':id', id), function(
+                    response) {
+                    $('#loader').hide();
+                    if (response.status === 'error') {
+                        notify('error', response.message);
+                        return;
+                    }
+
+                    // Set modal title and form method
+                    $('#addAssetModal .modal-title').text('Edit Asset');
+                    $('#addAssetForm').attr('action',
+                        "{{ route('technician.update.asset', ':id') }}".replace(':id', id));
+                    $('#method').val('PUT');
+
+                    // Populate fields
+                    $('#addAssetModal #asset_no').val(response.data.asset_no);
+                    $('#department').val(response.data.department);
+                    $('#next_due_date').val(response.data.next_due_date);
+                    $('#description').val(response.data.description);
+                    $('#next_due_date').flatpickr({
+                        enableTime: false,
+                        dateFormat: "d-m-Y",
+                    });
+                    $('#addAssetModal').modal('show');
+                    console.log(response.data);
+                }).fail(function() {
+                    $('#loader').hide();
+                    notify('error', 'Something went wrong. Please try again.');
+                });
+            });
+
         });
     </script>
 @endsection
