@@ -182,7 +182,7 @@
                             break;
                         case 'work underway':
                             $(row).css('background-color', '#ffff00');
-                            $(row).find('td').css('color', '#ffffff');
+                            $(row).find('td').css('color', '#000000');
                             break;
                         case 'tagged out – further work found':
                             $(row).css('background-color', '#ff0000');
