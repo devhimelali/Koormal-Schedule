@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Schedule extends Model
 {
+    protected $table = 'schedule';
     protected $fillable = [
         'asset_no',
         'department',

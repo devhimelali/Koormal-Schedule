@@ -17,55 +17,67 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <button class="btn btn-sm btn-primary" id="loadTodayWorks">
-                            <i class="ri-refresh-line align-bottom"></i>
-                            Today's Work
-                        </button>
-                        <button class="btn btn-sm btn-secondary" id="addAsset">
-                            <i class="ri-add-line align-bottom"></i>
-                            Add Asset
-                        </button>
-                    </div>
-                    <div>
-                        <ul class="unstyled-list list-inline mb-0 d-flex align-items-center gap-2">
-                            <li>
-                                <span
-                                    style="background-color: #ffffff; padding: 4px 8px; border-radius: 2px; border: 1px solid #000;">Not
-                                    yet
-                                    touched</span>
-                            </li>
-                            <li>
-                                <span
-                                    style="background-color: #00ff00; padding: 4px 8px; border-radius: 2px;border: 1px solid #000;">Delivered</span>
-                            </li>
-                            <li>
-                                <span
-                                    style="background-color: #ff00ff; padding: 4px 8px; border-radius: 2px;border: 1px solid #000;">No
-                                    show</span>
-                            </li>
-                            <li>
-                                <span
-                                    style="background-color: #ffff00; padding: 4px 8px; border-radius: 2px;border: 1px solid #000;">Work
-                                    underway</span>
-                            </li>
-                            <li>
-                                <span
-                                    style="background-color: #ff0000; padding: 4px 8px; border-radius: 2px;border: 1px solid #000;">Tagged
-                                    out –
-                                    further work found</span>
-                            </li>
-                            <li>
-                                <span
-                                    style="background-color: #00ffff; padding: 4px 8px; border-radius: 2px;border: 1px solid #000;">Work
-                                    completed,
-                                    ready for pickup</span>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <!-- Left Side: Buttons -->
+                        <div class="col-12 col-md-3 mb-2 mb-md-0">
+                            <div class="d-flex flex-wrap gap-2">
+                                <button class="btn btn-sm btn-primary" id="loadTodayWorks">
+                                    <i class="ri-refresh-line align-bottom"></i>
+                                    Today's Work
+                                </button>
+                                <button class="btn btn-sm btn-secondary" id="addAsset">
+                                    <i class="ri-add-line align-bottom"></i>
+                                    Add Asset
+                                </button>
+                            </div>
+                        </div>
 
+                        <!-- Right Side: Status Legend -->
+                        <div class="col-12 col-md-9">
+                            <ul class="list-inline mb-0 d-flex flex-wrap gap-2 justify-content-md-end">
+                                <li>
+                                    <span class="badge-status"
+                                        style="background-color: #ffffff; border: 1px solid #000;">Not yet touched</span>
+                                </li>
+                                <li>
+                                    <span class="badge-status"
+                                        style="background-color: #00ff00; border: 1px solid #000;">Delivered</span>
+                                </li>
+                                <li>
+                                    <span class="badge-status" style="background-color: #ff00ff; border: 1px solid #000;">No
+                                        show</span>
+                                </li>
+                                <li>
+                                    <span class="badge-status"
+                                        style="background-color: #ffff00; border: 1px solid #000;">Work underway</span>
+                                </li>
+                                <li>
+                                    <span class="badge-status"
+                                        style="background-color: #ff0000; border: 1px solid #000;">Tagged out – further work
+                                        found</span>
+                                </li>
+                                <li>
+                                    <span class="badge-status"
+                                        style="background-color: #00ffff; border: 1px solid #000;">Work completed, ready for
+                                        pickup</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Optional CSS for cleaner styling -->
+                <style>
+                    .badge-status {
+                        padding: 2px 8px;
+                        border-radius: 2px;
+                        display: inline-block;
+                        font-size: 0.75rem;
+                        white-space: nowrap;
+                    }
+                </style>
+
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-centered align-middle mb-0" id="dataTable">
