@@ -30,11 +30,14 @@ class ScheduleController extends Controller
                 $data = $data->where('asset_no', $request->asset_no);
             }
 
-            if (!empty($request->time_frame)) {
-                $today = date('Y-m-d');
-                $next_due_date = date('Y-m-d', strtotime($today . ' + ' . $request->time_frame . ' days'));
+            if (!empty($request->date_range)) {
+                $dates = explode(' to ', $request->date_range);
+                if (count($dates) == 2) {
+                    $startDate = $dates[0];
+                    $endDate = $dates[1];
 
-                $data = $data->whereRaw('STR_TO_DATE(next_due_date, "%d-%m-%Y") = ?', [$next_due_date]);
+                    $data = $data->whereRaw("STR_TO_DATE(next_due_date, '%d-%m-%Y') BETWEEN STR_TO_DATE(?, '%d-%m-%Y') AND STR_TO_DATE(?, '%d-%m-%Y')", [$startDate, $endDate]);
+                }
             }
 
             return DataTables::of($data)

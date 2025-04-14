@@ -4,11 +4,11 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">Schedules</h4>
+                <h4 class="mb-sm-0">Schedule</h4>
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{ route('redirect') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Schedules</li>
+                        <li class="breadcrumb-item active">Schedule</li>
                     </ol>
                 </div>
             </div>
@@ -18,7 +18,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex align-items-center">
-                    <h5 class="card-title mb-0 flex-grow-1">Scheduler List</h5>
+                    <h5 class="card-title mb-0 flex-grow-1">Schedule</h5>
                     <div class="flex-shrink-0 d-flex gap-2">
                         <div>
                             <select name="department" id="department" class="form-control">
@@ -37,11 +37,7 @@
                             </select>
                         </div>
                         <div>
-                            <select name="time_frame" id="time_frame" class="form-control">
-                                <option value="">Select Time Frame</option>
-                                <option value="1">1</option>
-                                <option value="7">7</option>
-                            </select>
+                            <input type="text" name="date-range" class="form-control" id="date-range">
                         </div>
                         <div>
                             <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
@@ -115,17 +111,29 @@
 @endsection
 @section('vendor-style')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/cdn/datatables/dataTables.bootstrap5.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}">
 @endsection
 @section('vendor-script')
     <script src="{{ asset('assets/cdn/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/cdn/datatables/dataTables.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/flatpickr/flatpickr.min.js') }}"></script>
 @endsection
 @section('page-script')
     <script>
         $(document).ready(function() {
+            $('#date-range').flatpickr({
+                mode: "range",
+                dateFormat: "d-m-Y",
+                onChange: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length === 2) {
+                        filterData();
+                    }
+                }
+            })
             let table = $('#dataTable').DataTable({
                 processing: true,
                 serverSide: true,
+                pageLength: 100,
                 ajax: {
                     url: "{{ route('schedules.index') }}",
                 },
@@ -151,16 +159,16 @@
                         data: 'next_due_date',
                         name: 'next_due_date'
                     }
-                ]
+                ],
             });
 
             function filterData() {
                 let department = $('#department').val();
                 let asset_no = $('#asset_no').val();
-                let time_frame = $('#time_frame').val();
+                let date_range = $('#date-range').val();
                 table.ajax.url("{{ route('schedules.index') }}?department=" + department + "&asset_no=" +
                         asset_no +
-                        "&time_frame=" + time_frame)
+                        "&date_range=" + date_range)
                     .load();
             }
 

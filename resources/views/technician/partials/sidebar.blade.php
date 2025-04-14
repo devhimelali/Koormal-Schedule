@@ -44,7 +44,7 @@
                         class="nav-link menu-link @if (Route::current()->getName() == 'schedules.index') active @endif"
                         aria-expanded="false">
                         <i class="ph-clock-clockwise"></i>
-                        <span data-key="t-dashboards">Schedules</span>
+                        <span data-key="t-dashboards">Schedule</span>
                     </a>
                 </li>
                 <li class="nav-item">

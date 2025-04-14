@@ -36,11 +36,11 @@ class TechniciansController extends Controller
                     $btn .= '<a href="javascript:void(0)" class="changeStatus btn btn-primary btn-sm" data-id="' . $row->id . '" data-status="' . $row->status . '">
                     <i class="ri-pencil-ruler-line"></i>
                     Change Status</a>
-                    <a href="javascript:void(0)" class="btn btn-secondary btn-sm sendEmail" data-asset_emails="' . $assetEmails . '" data-asset_no="' . $row->asset_no . '" data-status="' . $row->status . '" data-next_due_date="' . $row->next_due_date . '">
+                    <a href="javascript:void(0)" class="btn btn-secondary btn-sm sendEmail" data-asset_emails="' . $assetEmails . '" data-asset_no="' . $row->asset_no . '" data-status="' . $row->status . '" data-next_due_date="' . $row->next_due_date . '" data-description="' . $row->description . '">
                     <i class="ri-mail-send-line"></i>
                     Send Email</a>';
 
-                    if ($row->is_technician_entry) {
+                    if ($row->is_technician_entry && auth()->user()->roles->first()->name == 'technician') {
                         $btn .= '<a href="javascript:void(0)" class="editAsset btn btn-warning btn-sm" data-id="' . $row->id . '">
                         <i class="ri-edit-line"></i>
                         Edit</a>';
@@ -76,7 +76,7 @@ class TechniciansController extends Controller
         Schedule::where('is_today_works', 1)->update(['is_today_works' => 0]);
 
         // Set schedules where next_due_date matches today's date
-        Schedule::where('next_due_date', $today)->update(['is_today_works' => 1]);
+        Schedule::where('next_due_date', $today)->update(['is_today_works' => 1, 'status' => 'no status yet']);
 
         return response()->json([
             'status' => 'success',

@@ -22,14 +22,16 @@
                         <!-- Left Side: Buttons -->
                         <div class="col-12 col-md-3 mb-2 mb-md-0">
                             <div class="d-flex flex-wrap gap-2">
-                                <button class="btn btn-sm btn-primary" id="loadTodayWorks">
-                                    <i class="ri-refresh-line align-bottom"></i>
-                                    Today's Work
-                                </button>
-                                <button class="btn btn-sm btn-secondary" id="addAsset">
-                                    <i class="ri-add-line align-bottom"></i>
-                                    Add Asset
-                                </button>
+                                @if (auth()->user()->hasRole('technician'))
+                                    <button class="btn btn-sm btn-primary" id="loadTodayWorks">
+                                        <i class="ri-refresh-line align-bottom"></i>
+                                        Today's Work
+                                    </button>
+                                    <button class="btn btn-sm btn-secondary" id="addAsset">
+                                        <i class="ri-add-line align-bottom"></i>
+                                        Add Asset
+                                    </button>
+                                @endif
                             </div>
                         </div>
 
@@ -37,8 +39,8 @@
                         <div class="col-12 col-md-9">
                             <ul class="list-inline mb-0 d-flex flex-wrap gap-2 justify-content-md-end">
                                 <li>
-                                    <span class="badge-status"
-                                        style="background-color: #ffffff; border: 1px solid #000;">Not yet touched</span>
+                                    <span class="badge-status" style="background-color: #ffffff; border: 1px solid #000;">No
+                                        Status Yet</span>
                                 </li>
                                 <li>
                                     <span class="badge-status"
@@ -118,7 +120,7 @@
                         <div class="mb-3">
                             <label for="scheduleStatus" class="form-label">Status</label>
                             <select class="form-select" id="scheduleStatus" name="status">
-                                <option value="not yet touched">Not yet touched</option>
+                                <option value="no status yet">No Status Yet</option>
                                 <option value="no show">No show</option>
                                 <option value="work underway">Work underway</option>
                                 <option value="tagged out – further work found">Tagged out – further work found</option>
@@ -369,7 +371,7 @@
                             $(row).css('background-color', '#ff00ff');
                             $(row).find('td').css('color', '#ffffff');
                             break;
-                        case 'not yet touched':
+                        case 'no status yet':
                         default:
                             $(row).css('background-color', '#ffffff');
                     }
@@ -449,8 +451,9 @@
                 let asset_no = $(this).data('asset_no');
                 let status = $(this).data('status');
                 let next_due_date = $(this).data('next_due_date');
+                let description = $(this).data('description');
                 let subject =
-                    `${next_due_date} ${asset_no} Light Vehicle Inspection LC Dual Cab - 1 Monthly D/S Day shift`;
+                    `${next_due_date} ${asset_no} ${description}`;
                 const statusDetails = {
                     'not yet touched': {
                         background: '#ffffff',
@@ -572,6 +575,7 @@
                     dateFormat: 'd-m-Y',
                     defaultDate: 'today'
                 });
+                $('#addAssetForm').find('.is-invalid').removeClass('is-invalid');
             });
 
             $('#addAssetForm').on('submit', function(e) {
@@ -615,7 +619,7 @@
                     },
                     complete: function() {
                         $('#addAssetSubmitBtn').attr('disabled', false);
-                        $('#addAssetSubmitBtn').html('Add Asset');
+                        $('#addAssetSubmitBtn').html('Save');
                     }
                 });
             });
