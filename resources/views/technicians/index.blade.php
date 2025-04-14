@@ -160,6 +160,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="message" class="form-label">Message</label>
+                            <textarea class="ckeditor-classic form-control" name="message"></textarea>
                             <div id="message"></div>
                         </div>
                     </div>
@@ -261,10 +262,30 @@
     <script src="{{ asset('assets/cdn/datatables/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/libs/select2/select2.min.js') }}"></script>
     <script src="{{ asset('assets/libs/flatpickr/flatpickr.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/@ckeditor/ckeditor5-build-classic/build/ckeditor.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/pages/form-editor.init.js') }}"></script> --}}
 @endsection
 @section('page-script')
     <script>
         $(document).ready(function() {
+            let emailEditor;
+
+            $('#sendEmailModal').on('shown.bs.modal', function() {
+                if (!emailEditor) {
+                    ClassicEditor.create(document.querySelector('.ckeditor-classic'), {
+                            ckfinder: {
+                                uploadUrl: "{{ route('technician.ckeditor.upload', ['_token' => csrf_token()]) }}"
+                            }
+                        })
+                        .then(function(editor) {
+                            emailEditor = editor;
+                            editor.ui.view.editable.element.style.height = "170px";
+                        })
+                        .catch(function(error) {
+                            console.error(error);
+                        });
+                }
+            });
             $('#next_due_date').flatpickr({
                 enableTime: false,
                 dateFormat: "d-m-Y",
@@ -499,9 +520,15 @@
 
             $('#sendEmailForm').on('submit', function(e) {
                 e.preventDefault();
+                // Sync CKEditor content into the <textarea>
+                if (emailEditor) {
+                    emailEditor.updateSourceElement();
+                }
+                // Now get the updated form data
                 let formData = new FormData(this);
                 let url = $(this).attr('action');
                 let method = $(this).attr('method');
+
                 $.ajax({
                     url: url,
                     method: method,
@@ -591,6 +618,14 @@
                         $('#addAssetSubmitBtn').html('Add Asset');
                     }
                 });
+            });
+
+            $('#sendEmailModal').on('hidden.bs.modal', function() {
+                if (emailEditor) {
+                    emailEditor.setData(''); // Clear CKEditor content
+                }
+                $('#sendEmailForm')[0].reset(); // Reset other fields
+                $('#emails').val(null).trigger('change'); // If you're using Select2
             });
 
             $('body').on('click', '.deleteAsset', function() {

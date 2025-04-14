@@ -122,7 +122,10 @@ class TechniciansController extends Controller
         $statusData = $statusDetails[$request->status];
 
         foreach ($request->emails as $email) {
-            $body = '<span style="background-color: ' . $statusData['background'] . ' ; padding: 4px 8px; border-radius: 2px;border: 1px solid #000; color: ' . $statusData['color'] . '">' . $statusData['message'] . '</span>';
+            $body = '<div style="margin-top: 20px;">';
+            $body .= '<span style="background-color: ' . $statusData['background'] . ' ; padding: 4px 8px; border-radius: 2px;border: 1px solid #000; color: ' . $statusData['color'] . '">' . $statusData['message'] . '</span>';
+            $body .= $request->message;
+            $body .= '</div>';
             Mail::to($email)->send(new WorkStatusNotifyMail($request->subject, $body));
         }
 
@@ -208,5 +211,18 @@ class TechniciansController extends Controller
             'status' => 'success',
             'message' => 'Asset deleted successfully.'
         ]);
+    }
+
+    public function ckeditorUpload(Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $originName = $request->file('upload')->getClientOriginalName();
+            $fileName = pathinfo($originName, PATHINFO_FILENAME);
+            $extension = $request->file('upload')->getClientOriginalExtension();
+            $fileName = $fileName . '_' . time() . '.' . $extension;
+            $request->file('upload')->move(public_path('uploads/emails'), $fileName);
+            $url = asset('uploads/emails/' . $fileName);
+            return response()->json(['fileName' => $fileName, 'uploaded' => 1, 'url' => $url]);
+        }
     }
 }
