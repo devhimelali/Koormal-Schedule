@@ -55,6 +55,22 @@
                         <span data-key="t-dashboards">Technicians</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('technicians.index') }}"
+                        class="nav-link menu-link @if (Route::current()->getName() == 'technicians.index') active @endif"
+                        aria-expanded="false">
+                        <i class="ph ph-phone-call"></i>
+                        <span data-key="t-contact-koormal">Contact Koormal</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('technicians.index') }}"
+                        class="nav-link menu-link @if (Route::current()->getName() == 'technicians.index') active @endif"
+                        aria-expanded="false">
+                        <i class="ph ph-phone-call"></i>
+                        <span data-key="t-contact-4emus">Contact 4Emus</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->
