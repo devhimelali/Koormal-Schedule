@@ -28,6 +28,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // For technician role with password confirmation
         Route::middleware(['role:technician', 'password.confirm'])->get('/with-confirmation', [TechniciansController::class, 'index'])->name('technicians.index.confirm');
     });
+
+    Route::get('4emus-contact', function () {
+        return view('4emus_contact');
+    })->name('4emus.contact');
+
+    Route::get('koormal-contact', function () {
+        return view('koormal_contact');
+    })->name('koormal.contact');
 });
 
 Route::post('technicians/change-status', [TechniciansController::class, 'changeStatus'])->name('technicians.change.status')->middleware(['auth', 'role:admin|technician', 'verified']);
