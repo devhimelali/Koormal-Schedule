@@ -43,7 +43,7 @@
     </div>
 
     <div class="row">
-        <div class="col-xxl-2 col-lg-3 col-md-6 col-sm-6 col-6 mb-4">
+        <div class="col-xxl-2 col-lg-4 col-md-6 col-sm-6 col-12 mb-4">
             <div class="card real-estate-grid-widgets card-animate">
                 <div class="card-body p-2">
                     <img src="{{ asset('assets/images/alex.png') }}" alt="img-01.jpg" class="rounded w-100"
@@ -64,7 +64,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xxl-2 col-lg-3 col-md-6 col-sm-6 col-6 mb-4">
+        <div class="col-xxl-2 col-lg-4 col-md-6 col-sm-6 col-12 mb-4">
             <div class="card real-estate-grid-widgets card-animate">
                 <div class="card-body p-2">
                     <img src="{{ asset('assets/images/rashed.jpg') }}" alt="img-01.jpg" class="rounded w-100"
