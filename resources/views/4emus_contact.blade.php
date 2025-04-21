@@ -15,6 +15,32 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <p class="fs-5 mb-0">
+                        4EMUS has a strong focus on delivering work processes and methods to carry out heavy industry
+                        related work safely and efficiently. This is not just talk like you hear all the time at Management
+                        Meetings, we have the software and experience to actually deliver efficient and safe work practices
+                        where Safety and Production combine.
+                        This is not just a motherhood statement made at most Safety Meetings, which everyone knows is
+                        nonsense, it is factual and achievable.
+                        Once a method has been developed to make the work process efficient the safety requirements are
+                        implemented to ensure the stringent legal requirements are met.
+                        Doing the task efficiently is only a small part of the process often overlooked by heavy industry.
+                        Doing the work efficiently and safely has been difficult because there was no simple method to
+                        achieve both safety and efficiency.
+                        4EMUS was developed from decades of experience in Management, Maintenance Planning, Scheduling and
+                        Safety Management. Very rarely do all of these combine effectively.
+                        This process has been designed and implemented by people who have actually been at the front line
+                        for decades. The process was not designed by a Manager or IT Department that have no idea of the
+                        problems faced at the workplace by the end users.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-xxl-2 col-lg-3 col-md-6 col-sm-6 col-6 mb-4">

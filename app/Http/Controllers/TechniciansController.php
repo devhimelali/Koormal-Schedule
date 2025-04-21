@@ -87,10 +87,10 @@ class TechniciansController extends Controller
     public function sendEmail(Request $request)
     {
         $statusDetails = [
-            'not yet touched' => [
+            'no status yet' => [
                 'background' => '#ffffff',
                 'color' => '#000000',
-                'message' => 'Not yet touched',
+                'message' => 'No Status Yet',
             ],
             'delivered' => [
                 'background' => '#00ff00',
@@ -156,7 +156,7 @@ class TechniciansController extends Controller
             'description' => $request->description,
             'department' => $request->department,
             'next_due_date' => $request->next_due_date,
-            'status' => 'not yet touched',
+            'status' => 'no status yet',
             'is_today_works' => 1,
             'is_technician_entry' => 1,
         ]);
