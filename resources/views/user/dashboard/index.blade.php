@@ -21,6 +21,11 @@
                     <div class="text-center pt-5">
                         <img src="{{ asset('assets/images/4emus.png') }}" alt="" class="img-fluid" width="600">
                     </div>
+                    <p class="text-center pt-3 fs-5" style="margin-bottom: 4px;">Vehicles are to be delivered by 7am for
+                        dayshift inspections and by 7pm
+                        for nightshift.</p>
+                    <p class="text-center fs-5">All vehicles are to be cleaned before delivery and will not be worked
+                        on if there is a risk to the mechanics from the condition of the vehicle.</p>
                 </div>
             </div>
         </div>
