@@ -19,23 +19,27 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <p class="fs-5 mb-0">
+                    <p class="fs-5">
                         4EMUS has a strong focus on delivering work processes and methods to carry out heavy industry
-                        related work safely and efficiently. This is not just talk like you hear all the time at Management
-                        Meetings, we have the software and experience to actually deliver efficient and safe work practices
-                        where Safety and Production combine.
-                        This is not just a motherhood statement made at most Safety Meetings, which everyone knows is
-                        nonsense, it is factual and achievable.
+                        related work safely and efficiently. This is not just talk like, we have the software and experience
+                        to actually deliver efficient and safe work practices where Safety and Production combine.
+                    </p>
+                    <p class="fs-5">
                         Once a method has been developed to make the work process efficient the safety requirements are
                         implemented to ensure the stringent legal requirements are met.
                         Doing the task efficiently is only a small part of the process often overlooked by heavy industry.
+                    </p>
+                    <p class="fs-5">
                         Doing the work efficiently and safely has been difficult because there was no simple method to
                         achieve both safety and efficiency.
+                    </p>
+                    <p class="fs-5">
                         4EMUS was developed from decades of experience in Management, Maintenance Planning, Scheduling and
                         Safety Management. Very rarely do all of these combine effectively.
+                    </p>
+                    <p class="fs-5 mb-0">
                         This process has been designed and implemented by people who have actually been at the front line
-                        for decades. The process was not designed by a Manager or IT Department that have no idea of the
-                        problems faced at the workplace by the end users.
+                        for decades and seen the issues most current systems fail to address.
                     </p>
                 </div>
             </div>
