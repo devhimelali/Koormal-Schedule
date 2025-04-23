@@ -21,7 +21,7 @@
                     <h5 class="card-title mb-0 flex-grow-1">Schedule</h5>
                     <div class="flex-shrink-0 d-flex gap-2">
                         <div>
-                            <select name="department" id="department" class="form-control">
+                            <select name="department" id="department" class="form-control select2">
                                 <option value="">Select Department</option>
                                 @foreach ($departments as $department)
                                     <option value="{{ $department }}">{{ $department }}</option>
@@ -29,7 +29,7 @@
                             </select>
                         </div>
                         <div>
-                            <select name="asset_no" id="asset_no" class="form-control">
+                            <select name="asset_no" id="asset_no" class="form-control select2">
                                 <option value="">Select Asset Number</option>
                                 @foreach ($assets as $asset)
                                     <option value="{{ $asset }}">{{ $asset }}</option>
@@ -112,15 +112,32 @@
 @section('vendor-style')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/cdn/datatables/dataTables.bootstrap5.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/libs/select2/select2.min.css') }}">
+    <style>
+        .select2-selection__rendered {
+            line-height: 36px !important;
+        }
+
+        .select2-container .select2-selection--single {
+            height: 38px !important;
+        }
+
+        .select2-selection__arrow {
+            height: 36px !important;
+        }
+    </style>
 @endsection
 @section('vendor-script')
     <script src="{{ asset('assets/cdn/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/cdn/datatables/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/libs/flatpickr/flatpickr.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/select2/select2.min.js') }}"></script>
 @endsection
 @section('page-script')
     <script>
         $(document).ready(function() {
+            $('.select2').select2();
+
             $('#date-range').flatpickr({
                 mode: "range",
                 dateFormat: "d-m-Y",

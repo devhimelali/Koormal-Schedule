@@ -27,7 +27,7 @@
                         maintaining a schedule is important. To move one vehicle we generally have to move another.
                     </p>
                     <p class="fs-5">
-                        The schedule gives the vehicle owners at least four weeks notice to organise another vehicle.
+                        The schedule gives the vehicle owners at least four weeks notice to organize another vehicle.
                     </p>
                     <p class="fs-5">
                         Production does not come before safety and vehicle inspections are a legal requirement, it is not
