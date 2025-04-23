@@ -19,13 +19,28 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <p class="fs-5 mb-0">
+                    <p class="fs-5">
                         Contact Koormal Admin for changes to the email contacts or other schedule related issues.
+                    </p>
+                    <p class="fs-5">
                         You cannot just move schedules to suit - there are over 150 light vehicles to inspect and service so
                         maintaining a schedule is important. To move one vehicle we generally have to move another.
-                        The schedule gives the vehicle owners at least a four weeks notice to organise another vehicle.
+                    </p>
+                    <p class="fs-5">
+                        The schedule gives the vehicle owners at least four weeks notice to organise another vehicle.
+                    </p>
+                    <p class="fs-5">
                         Production does not come before safety and vehicle inspections are a legal requirement, it is not
                         optional.
+                    </p>
+                    <p class="fs-5">
+                        Vehicles are to be delivered to the workshop at 7am for dayshift vehicles and 7pm for nightshift
+                        vehicles.
+                    </p>
+                    <p class="fs-5 mb-0">
+                        Vehicles are to be cleaned before delivery, the mechanics will report vehicles that have not been
+                        cleaned properly especially underneath and the vehicle will not be serviced if it is a risk to the
+                        people doing the work.
                     </p>
                 </div>
             </div>
