@@ -180,8 +180,18 @@
         aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header d-flex justify-content-between">
                     <h5 class="modal-title" id="myModalLabel">Create a New Asset</h5>
+                    <style>
+                        .modal-header-center {
+                            margin-left: 130px;
+                        }
+                    </style>
+                    <div class="modal-header-center">
+                        <select name="schedule_id" class="form-select" id="schedule_id">
+                            <option value="">Select Schedule</option>
+                        </select>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <form action="{{ route('technician.add.asset') }}" method="post" id="addAssetForm">
@@ -258,6 +268,11 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/cdn/datatables/dataTables.bootstrap5.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/libs/select2/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}">
+    <style>
+        /* .select2-dropdown {
+                                                                                                        z-index: 10060 !important;
+                                                                                                    } */
+    </style>
 @endsection
 @section('vendor-script')
     <script src="{{ asset('assets/cdn/datatables/jquery.dataTables.min.js') }}"></script>
@@ -708,6 +723,49 @@
                 });
             });
 
+            $('#addAssetModal').on('show.bs.modal', function() {
+                $.ajax({
+                    url: "{{ route('technician.schedule.list') }}",
+                    type: 'GET',
+                    success: function(data) {
+                        let select = $('#schedule_id');
+                        select.empty().append('<option value="">Select Schedule</option>');
+                        data.forEach(function(schedule) {
+                            select.append(
+                                `<option value="${schedule.id}">${schedule.asset_no}</option>`
+                            );
+                        });
+                        select.select2({
+                            dropdownParent: $("#addAssetModal")
+                        });
+                    }
+                });
+            });
+
+            $('body').on('change', '#schedule_id', function() {
+                let id = $(this).val();
+                let url = "{{ route('technician.get.schedule.by.id', ':id') }}".replace(':id', id);
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            $('#addAssetModal #asset_no').val(response.data.asset_no);
+                            $('#department').val(response.data.department);
+                            $('#next_due_date').val(response.data.next_due_date);
+                            $('#description').val(response.data.description);
+                            $('#next_due_date').flatpickr({
+                                enableTime: false,
+                                dateFormat: "d-m-Y",
+                            });
+                        } else {
+                            notify('error', response.message);
+                        }
+                    }
+                });
+            })
         });
     </script>
 @endsection

@@ -83,8 +83,8 @@
                         <!-- item -->
                         <a href="javascript:void(0);" class="py-2 dropdown-item notify-item">
                             <div class="d-flex">
-                                <img src="assets/images/users/avatar-2.jpg" class="me-3 rounded-circle avatar-xs"
-                                    alt="user-pic">
+                                <img src="{{ asset('assets/images/users/avatar-2.jpg') }}"
+                                    class="me-3 rounded-circle avatar-xs" alt="user-pic">
                                 <div class="flex-1">
                                     <h6 class="m-0">Angela Bernier</h6>
                                     <span class="mb-0 fs-2xs text-muted">Manager</span>
@@ -94,8 +94,8 @@
                         <!-- item -->
                         <a href="javascript:void(0);" class="py-2 dropdown-item notify-item">
                             <div class="d-flex">
-                                <img src="assets/images/users/avatar-3.jpg" class="me-3 rounded-circle avatar-xs"
-                                    alt="user-pic">
+                                <img src="{{ asset('assets/images/users/avatar-3.jpg') }}"
+                                    class="me-3 rounded-circle avatar-xs" alt="user-pic">
                                 <div class="flex-1">
                                     <h6 class="m-0">David Grasso</h6>
                                     <span class="mb-0 fs-2xs text-muted">Web Designer</span>
@@ -105,8 +105,8 @@
                         <!-- item -->
                         <a href="javascript:void(0);" class="py-2 dropdown-item notify-item">
                             <div class="d-flex">
-                                <img src="assets/images/users/avatar-5.jpg" class="me-3 rounded-circle avatar-xs"
-                                    alt="user-pic">
+                                <img src="{{ asset('assets/images/users/avatar-5.jpg') }}"
+                                    class="me-3 rounded-circle avatar-xs" alt="user-pic">
                                 <div class="flex-1">
                                     <h6 class="m-0">Mike Bunch</h6>
                                     <span class="mb-0 fs-2xs text-muted">React Developer</span>

@@ -15,4 +15,6 @@ Route::middleware(['auth', 'role:technician', 'verified'])->group(function () {
     Route::put('update-asset/{id}', [TechniciansController::class, 'updateAsset'])->name('technician.update.asset');
     Route::delete('delete-asset/{id}', [TechniciansController::class, 'deleteAsset'])->name('technician.delete.asset');
     Route::post('ckeditor.upload', [TechniciansController::class, 'ckeditorUpload'])->name('technician.ckeditor.upload');
+    Route::get('schedule-list', [TechniciansController::class, 'scheduleList'])->name('technician.schedule.list');
+    Route::get('get-schedule-by-id/{id}', [TechniciansController::class, 'getScheduleById'])->name('technician.get.schedule.by.id');
 });

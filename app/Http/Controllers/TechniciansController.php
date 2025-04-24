@@ -7,6 +7,7 @@ use App\Models\Asset;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 use App\Mail\WorkStatusNotifyMail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -40,7 +41,7 @@ class TechniciansController extends Controller
                     <i class="ri-mail-send-line"></i>
                     Send Email</a>';
 
-                    if ($row->is_technician_entry && auth()->user()->roles->first()->name == 'technician') {
+                    if ($row->is_technician_entry && Auth::user()->roles->first()->name == 'technician') {
                         $btn .= '<a href="javascript:void(0)" class="editAsset btn btn-warning btn-sm" data-id="' . $row->id . '">
                         <i class="ri-edit-line"></i>
                         Edit</a>';
@@ -224,5 +225,27 @@ class TechniciansController extends Controller
             $url = asset('uploads/emails/' . $fileName);
             return response()->json(['fileName' => $fileName, 'uploaded' => 1, 'url' => $url]);
         }
+    }
+
+    public function scheduleList()
+    {
+        return Schedule::select('id', 'asset_no')->orderBy('asset_no')->get();
+    }
+
+    public function getScheduleById($id)
+    {
+        $schedule = Schedule::find($id);
+
+        if (!$schedule) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Schedule not found.'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $schedule
+        ]);
     }
 }

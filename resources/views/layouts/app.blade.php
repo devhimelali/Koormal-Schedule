@@ -44,18 +44,18 @@
             <div class="navbar-brand-box">
                 <a href="{{ route('redirect') }}" class="logo logo-dark">
                     <span class="logo-sm">
-                        <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
+                        <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="22">
+                        <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="22">
                     </span>
                 </a>
                 <a href="{{ route('redirect') }}" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
+                        <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('assets/images/logo-light.png') }}" alt="" height="22">
+                        <img src="{{ asset('assets/images/4emus.png') }}" alt="" height="22">
                     </span>
                 </a>
                 <button type="button" class="p-0 btn btn-sm fs-3xl header-item float-end btn-vertical-sm-hover"
