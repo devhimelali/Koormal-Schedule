@@ -270,8 +270,8 @@
     <link rel="stylesheet" href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}">
     <style>
         /* .select2-dropdown {
-                                                                                                        z-index: 10060 !important;
-                                                                                                    } */
+                                                                                                                z-index: 10060 !important;
+                                                                                                            } */
     </style>
 @endsection
 @section('vendor-script')
@@ -750,6 +750,9 @@
                     url: url,
                     type: 'GET',
                     dataType: 'json',
+                    beforeSend: function() {
+                        $('#loader').show();
+                    },
                     success: function(response) {
                         if (response.status === 'success') {
                             $('#addAssetModal #asset_no').val(response.data.asset_no);
@@ -763,6 +766,9 @@
                         } else {
                             notify('error', response.message);
                         }
+                    },
+                    complete: function() {
+                        $('#loader').hide();
                     }
                 });
             })
