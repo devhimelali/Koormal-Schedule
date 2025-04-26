@@ -181,12 +181,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header d-flex justify-content-between">
-                    <h5 class="modal-title" id="myModalLabel">Create a New Asset</h5>
-                    <style>
-                        .modal-header-center {
-                            margin-left: 130px;
-                        }
-                    </style>
+                    <h5 class="modal-title" id="myModalLabel">Add Asset to Todays Work List</h5>
                     <div class="modal-header-center">
                         <select name="schedule_id" class="form-select" id="schedule_id">
                             <option value="">Select Schedule</option>
@@ -216,11 +211,11 @@
                             <input type="text" class="form-control" id="next_due_date" name="next_due_date">
                             <div class="invalid-feedback"></div>
                         </div>
-                        <div>
+                        {{-- <div>
                             <label for="description" class="form-label">Description</label>
                             <textarea class="form-control" id="description" name="description" placeholder="Description" rows="7"></textarea>
                             <div class="invalid-feedback"></div>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
@@ -269,9 +264,16 @@
     <link rel="stylesheet" href="{{ asset('assets/libs/select2/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}">
     <style>
-        /* .select2-dropdown {
-                                                                                                                z-index: 10060 !important;
-                                                                                                            } */
+        .modal-header-center {
+            margin-left: 130px;
+        }
+
+        @media only screen and (max-width: 480px) {
+            .modal-header-center {
+                margin-left: 10px;
+                width: 200px;
+            }
+        }
     </style>
 @endsection
 @section('vendor-script')
@@ -306,7 +308,9 @@
             $('#next_due_date').flatpickr({
                 enableTime: false,
                 dateFormat: "d-m-Y",
-                defaultDate: "today"
+                defaultDate: "today",
+                minDate: "today",
+                maxDate: "today"
             });
 
             $('#emails').select2({
@@ -583,7 +587,7 @@
             $('#addAssetModal').on('hidden.bs.modal', function() {
                 $('#addAssetForm')[0].reset();
                 $('#method').val('POST');
-                $('#addAssetModal .modal-title').text('Create a New Asset');
+                $('#addAssetModal .modal-title').text('Add Asset to Todays Work List');
                 $('#addAssetForm').attr('action', "{{ route('technician.add.asset') }}");
                 $('#next_due_date').flatpickr({
                     enableTime: false,
@@ -701,7 +705,7 @@
                     }
 
                     // Set modal title and form method
-                    $('#addAssetModal .modal-title').text('Edit Asset');
+                    $('#addAssetModal .modal-title').text('Edit Asset to Todays Work List');
                     $('#addAssetForm').attr('action',
                         "{{ route('technician.update.asset', ':id') }}".replace(':id', id));
                     $('#method').val('PUT');
@@ -710,10 +714,11 @@
                     $('#addAssetModal #asset_no').val(response.data.asset_no);
                     $('#department').val(response.data.department);
                     $('#next_due_date').val(response.data.next_due_date);
-                    $('#description').val(response.data.description);
                     $('#next_due_date').flatpickr({
                         enableTime: false,
                         dateFormat: "d-m-Y",
+                        minDate: "today",
+                        maxDate: "today"
                     });
                     $('#addAssetModal').modal('show');
                     console.log(response.data);
@@ -757,11 +762,12 @@
                         if (response.status === 'success') {
                             $('#addAssetModal #asset_no').val(response.data.asset_no);
                             $('#department').val(response.data.department);
-                            $('#next_due_date').val(response.data.next_due_date);
-                            $('#description').val(response.data.description);
                             $('#next_due_date').flatpickr({
                                 enableTime: false,
                                 dateFormat: "d-m-Y",
+                                defaultDate: "today",
+                                minDate: "today",
+                                maxDate: "today"
                             });
                         } else {
                             notify('error', response.message);

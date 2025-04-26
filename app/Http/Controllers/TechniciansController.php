@@ -19,6 +19,12 @@ class TechniciansController extends Controller
             $data = Schedule::with('asset.assetEmails.email')->where('is_today_works', 1);
             return datatables()->of($data)
                 ->addIndexColumn()
+                ->addColumn('description', function ($row) {
+                    return $row->description ?? 'N/A';
+                })
+                ->addColumn('department', function ($row) {
+                    return $row->department ?? 'N/A';
+                })
                 ->addColumn('status', function ($row) {
                     return ucfirst($row->status);
                 })
@@ -140,13 +146,11 @@ class TechniciansController extends Controller
     {
         $request->validate([
             'asset_no' => 'required',
-            'description' => 'required',
             'next_due_date' => 'required',
         ]);
 
         Asset::create([
             'asset_no' => $request->asset_no,
-            'description' => $request->description,
             'department' => $request->department,
             'next_due_date' => $request->next_due_date,
             'is_technician_entry' => 1,
@@ -154,7 +158,6 @@ class TechniciansController extends Controller
 
         Schedule::create([
             'asset_no' => $request->asset_no,
-            'description' => $request->description,
             'department' => $request->department,
             'next_due_date' => $request->next_due_date,
             'status' => 'no status yet',
@@ -187,13 +190,11 @@ class TechniciansController extends Controller
     {
         $request->validate([
             'asset_no' => 'required',
-            'description' => 'required',
             'next_due_date' => 'required',
         ]);
 
         $schedule = Schedule::find($id);
         $schedule->asset_no = $request->asset_no;
-        $schedule->description = $request->description;
         $schedule->department = $request->department;
         $schedule->next_due_date = $request->next_due_date;
         $schedule->save();
