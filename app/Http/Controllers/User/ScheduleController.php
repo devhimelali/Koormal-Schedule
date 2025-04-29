@@ -20,7 +20,8 @@ class ScheduleController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Schedule::where('is_technician_entry', 0);
+            $data = Schedule::where('asset_no', 'like', '%' . $request->type . "%")
+                ->where('is_technician_entry', 0);
 
             if (!empty($request->department)) {
                 $data = $data->where('department', $request->department);
@@ -59,6 +60,10 @@ class ScheduleController extends Controller
     public function exportPdf(Request $request)
     {
         $schedules = Schedule::query();
+
+        if (!empty($request->type)) {
+            $schedules = $schedules->where('asset_no', 'like', '%' . $request->type . "%");
+        }
 
         if (!empty($request->department)) {
             $schedules = $schedules->where('department', $request->department);

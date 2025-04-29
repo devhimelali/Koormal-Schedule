@@ -40,10 +40,10 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('schedules.index') }}"
-                        class="nav-link menu-link @if (Route::current()->getName() == 'schedules.index') active @endif"
+                    <a href="javascript:void(0)"
+                        class="nav-link scheduleMenuBtn menu-link @if (Route::current()->getName() == 'schedules.index') active @endif"
                         aria-expanded="false">
-                        <i class="ph-clock-clockwise"></i>
+                        <i class="ph-calendar-check"></i>
                         <span data-key="t-dashboards">Schedule</span>
                     </a>
                 </li>

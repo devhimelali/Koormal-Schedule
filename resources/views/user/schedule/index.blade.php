@@ -1,14 +1,18 @@
 @extends('layouts.app')
 @section('title', 'Schedules')
 @section('content')
+    @php
+        $type = request()->query('type');
+        $label = $type == 'lv' ? 'Light Vehicles' : 'Lighting Towers';
+    @endphp
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">Schedule</h4>
+                <h4 class="mb-sm-0">Schedule {{ $label }}</h4>
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{ route('redirect') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Schedule</li>
+                        <li class="breadcrumb-item active">Schedule {{ $label }}</li>
                     </ol>
                 </div>
             </div>
@@ -18,7 +22,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex align-items-center">
-                    <h5 class="card-title mb-0 flex-grow-1">Schedule</h5>
+                    <h5 class="card-title mb-0 flex-grow-1">Schedule List</h5>
                     <div class="flex-shrink-0 d-flex gap-2">
                         <div>
                             <select name="department" id="department" class="form-control select2">
@@ -147,12 +151,14 @@
                     }
                 }
             })
+            let type = "{{ request()->query('type') }}";
+
             let table = $('#dataTable').DataTable({
                 processing: true,
                 serverSide: true,
                 pageLength: 100,
                 ajax: {
-                    url: "{{ route('schedules.index') }}",
+                    url: "{{ route('schedules.index') }}" + "?type=" + type,
                 },
                 columns: [{
                         data: 'DT_RowIndex',
@@ -183,10 +189,14 @@
                 let department = $('#department').val();
                 let asset_no = $('#asset_no').val();
                 let date_range = $('#date-range').val();
-                table.ajax.url("{{ route('schedules.index') }}?department=" + department + "&asset_no=" +
-                        asset_no +
-                        "&date_range=" + date_range)
-                    .load();
+                table.ajax.url(
+                    "{{ route('schedules.index') }}" +
+                    "?type=" + type +
+                    "&department=" + department +
+                    "&asset_no=" + asset_no +
+                    "&date_range=" + date_range
+                ).load();
+
             }
 
             $('#department, #asset_no, #time_frame').on('change', function() {
@@ -196,9 +206,13 @@
             $('#exportPdf').on('click', function() {
                 let department = $('#department').val();
                 let asset_no = $('#asset_no').val();
-                let time_frame = $('#time_frame').val();
-                window.location.href = "{{ route('schedules.export.pdf') }}?department=" + department +
-                    "&asset_no=" + asset_no + "&time_frame=" + time_frame;
+                let time_frame = $('#date-range').val();
+                // alert(department + asset_no + time_frame);
+                window.location.href = "{{ route('schedules.export.pdf') }}" +
+                    "?type=" + type +
+                    "&department=" + department +
+                    "&asset_no=" + asset_no +
+                    "&time_frame=" + time_frame;
             });
 
             $('#sendEmailForm').on('submit', function(e) {

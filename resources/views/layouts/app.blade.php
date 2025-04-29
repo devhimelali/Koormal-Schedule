@@ -29,6 +29,7 @@
     <!-- App Css-->
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{{ asset('assets/libs/toastr/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}">
     @yield('vendor-style')
     @yield('page-style')
 </head>
@@ -146,6 +147,25 @@
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('assets/libs/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.all.min.js') }}"></script>
+    <script>
+        $('body').on('click', '.scheduleMenuBtn', function() {
+            Swal.fire({
+                title: 'Select Asset Type',
+                text: "Nothing you choose here will affect the schedule.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Light Vehicles',
+                cancelButtonText: 'Lighting Towers',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{{ route('schedules.index', ['type' => 'lv']) }}";
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    window.location.href = "{{ route('schedules.index', ['type' => 'lt']) }}";
+                }
+            });
+        });
+    </script>
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             <script>
