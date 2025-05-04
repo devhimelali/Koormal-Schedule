@@ -227,8 +227,17 @@
             show('{{ $toast['type'] ?? 'info' }}', options);
         @endforeach
 
-        function notify(type, msg, position = 'topRight') {
-            toastr[type](msg);
+        function notify(type, msg, position = 'toast-top-right') {
+            if (['success', 'info', 'warning', 'error'].includes(type)) {
+                toastr.options = {
+                    closeButton: true,
+                    positionClass: position,
+                    progressBar: true
+                };
+                toastr[type](msg);
+            } else {
+                console.error(`Invalid toastr type: ${type}`);
+            }
         }
 
         function show(type, options) {
