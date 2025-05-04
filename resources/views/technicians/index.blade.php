@@ -290,7 +290,7 @@
                 if (!emailEditor) {
                     ClassicEditor.create(document.querySelector('.ckeditor-classic'), {
                             ckfinder: {
-                                uploadUrl: "{{ route('technician.ckeditor.upload', ['_token' => csrf_token()]) }}"
+                                uploadUrl: "{{ route('technician.ckeditor.upload') }}?_token={{ csrf_token() }}"
                             }
                         })
                         .then(function(editor) {
@@ -302,6 +302,8 @@
                         });
                 }
             });
+
+
             $('#next_due_date').flatpickr({
                 enableTime: false,
                 dateFormat: "d-m-Y",
@@ -569,9 +571,25 @@
                             $('#sendEmailModal').modal('hide');
                         }
                     },
-                    error: function(response) {
-                        notify('error',
-                            'Something went wrong on our end. Please try again later.');
+                    error: function(xhr, status, error) {
+                        // if validation fails
+                        if (xhr.status == 422) {
+                            let errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, value) {
+                                notify('error', value);
+                                let input = $('[name="' + key + '"]');
+                                input.addClass('is-invalid');
+                                input.next('.invalid-feedback').text(value);
+                            });
+                        } else if (xhr.status === 429) {
+                            notify('error',
+                                'Too many failed attempts. Please try again later.');
+                        } else if (xhr.status === 500) {
+                            notify('error',
+                                'Something went wrong on our end. Please try again later.');
+                        } else {
+                            notify('error', error);
+                        }
                     },
                     complete: function() {
                         $('#sendEmailBtn').attr('disabled', false);
