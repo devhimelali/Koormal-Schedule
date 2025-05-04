@@ -4,6 +4,9 @@ namespace App\Http\Controllers\User;
 
 use App\Models\Asset;
 use App\Models\Email;
+use App\Models\LightingTowerAsset;
+use App\Models\LightingTowerSchedule;
+use App\Models\LightVehicleSchedule;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 use App\Mail\ScheduleListMail;
@@ -12,6 +15,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Yajra\DataTables\DataTables;
 use App\Jobs\SendScheduleEmailJob;
 use App\Http\Controllers\Controller;
+use App\Models\LightVehicleAsset;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,9 +23,13 @@ class ScheduleController extends Controller
 {
     public function index(Request $request)
     {
+        $type = $request->type;
         if ($request->ajax()) {
-            $data = Schedule::where('asset_no', 'like', '%' . $request->type . "%")
-                ->where('is_technician_entry', 0);
+            if ($type == 'lv') {
+                $data = LightVehicleSchedule::where('is_technician_entry', 0);
+            } elseif ($type == 'lt') {
+                $data = LightingTowerSchedule::where('is_technician_entry', 0);
+            }
 
             if (!empty($request->department)) {
                 $data = $data->where('department', $request->department);
@@ -45,24 +53,36 @@ class ScheduleController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
-        $departments = Schedule::where('department', '!=', null)
-            ->orderBy('department', 'asc')
-            ->distinct()
-            ->pluck('department');
+        if ($type == 'lv') {
+            $departments = LightVehicleSchedule::where('department', '!=', null)
+                ->orderBy('department', 'asc')
+                ->distinct()
+                ->pluck('department');
 
-        $assets = Asset::orderBy('asset_no', 'asc')
-            ->distinct()
-            ->pluck('asset_no');
+            $assets = LightVehicleAsset::orderBy('asset_no', 'asc')
+                ->distinct()
+                ->pluck('asset_no');
+        } elseif ($type == 'lt') {
+            $departments = LightingTowerSchedule::where('department', '!=', null)
+                ->orderBy('department', 'asc')
+                ->distinct()
+                ->pluck('department');
+
+            $assets = LightingTowerAsset::orderBy('asset_no', 'asc')
+                ->distinct()
+                ->pluck('asset_no');
+        }
 
         return view('user.schedule.index', compact('assets', 'departments'));
     }
 
     public function exportPdf(Request $request)
     {
-        $schedules = Schedule::query();
-
-        if (!empty($request->type)) {
-            $schedules = $schedules->where('asset_no', 'like', '%' . $request->type . "%");
+        $type = $request->type;
+        if ($type == 'lv') {
+            $schedules = LightVehicleSchedule::where('is_technician_entry', 0);
+        } elseif ($type == 'lt') {
+            $schedules = LightingTowerSchedule::where('is_technician_entry', 0);
         }
 
         if (!empty($request->department)) {
@@ -72,6 +92,7 @@ class ScheduleController extends Controller
         if (!empty($request->asset_no)) {
             $schedules = $schedules->where('asset_no', $request->asset_no);
         }
+
         if (!empty($request->time_frame)) {
             $today = date('Y-m-d');
             $next_due_date = date('Y-m-d', strtotime($today . ' + ' . $request->time_frame . ' days'));
@@ -104,11 +125,13 @@ class ScheduleController extends Controller
             'email' => 'required|string',
             'subject' => 'required|string',
             'message' => 'required|string',
+            'type' => 'required|in:lv,lt',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
+
         $emailArray = array_map('trim', explode(',', $request->email));
 
         foreach ($emailArray as $email) {
@@ -117,7 +140,12 @@ class ScheduleController extends Controller
             }
         }
 
-        $schedules = Schedule::query();
+        $type = $request->type;
+        if ($type == 'lv') {
+            $schedules = LightVehicleSchedule::where('is_technician_entry', 0);
+        } elseif ($type == 'lt') {
+            $schedules = LightingTowerSchedule::where('is_technician_entry', 0);
+        }
 
         if (!empty($request->department)) {
             $schedules = $schedules->where('department', $request->department);

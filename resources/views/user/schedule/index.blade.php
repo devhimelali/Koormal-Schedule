@@ -207,12 +207,14 @@
                 let department = $('#department').val();
                 let asset_no = $('#asset_no').val();
                 let time_frame = $('#date-range').val();
-                // alert(department + asset_no + time_frame);
-                window.location.href = "{{ route('schedules.export.pdf') }}" +
-                    "?type=" + type +
-                    "&department=" + department +
-                    "&asset_no=" + asset_no +
-                    "&time_frame=" + time_frame;
+
+                let url = "{{ route('schedules.export.pdf') }}" +
+                    "?type=" + encodeURIComponent(type) +
+                    "&department=" + encodeURIComponent(department) +
+                    "&asset_no=" + encodeURIComponent(asset_no) +
+                    "&time_frame=" + encodeURIComponent(time_frame);
+
+                window.open(url, '_blank');
             });
 
             $('#sendEmailForm').on('submit', function(e) {
@@ -221,6 +223,7 @@
                 formData.append('department', $('#department').val());
                 formData.append('asset_no', $('#asset_no').val());
                 formData.append('time_frame', $('#time_frame').val());
+                formData.append('type', type);
                 let url = $(this).attr('action');
                 let method = $(this).attr('method');
                 $.ajax({

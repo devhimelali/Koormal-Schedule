@@ -165,6 +165,40 @@
                 }
             });
         });
+
+        $('body').on('click', '.technicianMenuBtn', function() {
+            Swal.fire({
+                title: 'Select Asset Type',
+                text: "Nothing you choose here will affect the todays live schedule.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Light Vehicles',
+                cancelButtonText: 'Lighting Towers',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{{ route('technicians.index', ['type' => 'lv']) }}";
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    window.location.href = "{{ route('technicians.index', ['type' => 'lt']) }}";
+                }
+            });
+        });
+
+        $('body').on('click', '.technicianTMenuBtn', function() {
+            Swal.fire({
+                title: 'Select Asset Type',
+                text: "Nothing you choose here will affect the todays live schedule.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Light Vehicles',
+                cancelButtonText: 'Lighting Towers',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{{ route('technicians.index.confirm', ['type' => 'lv']) }}";
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    window.location.href = "{{ route('technicians.index.confirm', ['type' => 'lt']) }}";
+                }
+            });
+        });
     </script>
     @if ($errors->any())
         @foreach ($errors->all() as $error)

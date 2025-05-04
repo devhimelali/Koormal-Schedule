@@ -117,6 +117,7 @@
                     @csrf
                     <div class="modal-body">
                         <input type="hidden" name="id" id="scheduleId">
+                        <input type="hidden" name="type" id="scheduleType">
                         <div class="mb-3">
                             <label for="scheduleStatus" class="form-label">Status</label>
                             <select class="form-select" id="scheduleStatus" name="status">
@@ -192,6 +193,7 @@
                 <form action="{{ route('technician.add.asset') }}" method="post" id="addAssetForm">
                     @csrf
                     <input type="hidden" name="_method" value="POST" id="method">
+                    <input type="hidden" name="type" id="type">
                     <div class="modal-body">
                         <div class="mb-2">
                             <label for="asset_no" class="form-label">Asset Number <span
@@ -211,11 +213,6 @@
                             <input type="text" class="form-control" id="next_due_date" name="next_due_date">
                             <div class="invalid-feedback"></div>
                         </div>
-                        {{-- <div>
-                            <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control" id="description" name="description" placeholder="Description" rows="7"></textarea>
-                            <div class="invalid-feedback"></div>
-                        </div> --}}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
@@ -322,9 +319,10 @@
 
             let isAdmin = @json(auth()->user()->hasRole('admin'));
             let isTechnician = @json(auth()->user()->hasRole('technician'));
-            let url = "{{ route('technicians.index') }}";
+            let type = "{{ request()->query('type') }}";
+            let url = "{{ route('technicians.index') }}" + "?type=" + type;
             if (isTechnician) {
-                url = "{{ route('technicians.index.confirm') }}";
+                url = "{{ route('technicians.index.confirm') }}" + "?type=" + type;
             }
 
             let columns = [{
@@ -400,6 +398,7 @@
             $('body').on('click', '.changeStatus', function() {
                 let id = $(this).data('id');
                 $('#scheduleId').val(id);
+                $('#scheduleType').val(type);
                 $('#scheduleStatus').val($(this).data('status'));
                 $('#statusModal').modal('show');
             });
@@ -439,7 +438,7 @@
 
             $('#loadTodayWorks').on('click', function() {
                 $.ajax({
-                    url: "{{ route('technician.load.today.works') }}",
+                    url: "{{ route('technician.load.today.works') }}" + "?type=" + type,
                     method: 'GET',
                     beforeSend: function() {
                         $('#loadTodayWorks').attr('disabled', true);
@@ -523,6 +522,7 @@
             border: 1px solid #000;
             display: inline-block;
             margin-bottom: 10px;
+            margin-top: 10px;
         ">${statusData.message}</span>`;
                 let emails = asset_emails.split(',').map(email => email.trim());
                 $('#emails').empty();
@@ -581,6 +581,7 @@
             });
 
             $('#addAsset').on('click', function() {
+                $('#type').val(type);
                 $('#addAssetModal').modal('show');
             });
 
@@ -653,8 +654,9 @@
 
             $('body').on('click', '.deleteAsset', function() {
                 let id = $(this).data('id');
-                $('#deleteForm').attr('action', "{{ route('technician.delete.asset', ':id') }}".replace(
-                    ':id', id));
+                let url = "{{ route('technician.delete.asset', ':id') }}".replace(':id', id) +
+                    "?type=" + type;
+                $('#deleteForm').attr('action', url);
                 $('#deleteModal').modal('show');
             });
 
@@ -696,33 +698,35 @@
                 let id = $(this).data('id');
                 $('#loader').show();
 
-                $.get("{{ route('technician.edit.asset', ':id') }}".replace(':id', id), function(
-                    response) {
-                    $('#loader').hide();
-                    if (response.status === 'error') {
-                        notify('error', response.message);
-                        return;
-                    }
+                $.get("{{ route('technician.edit.asset', ':id') }}".replace(':id', id) + "?type=" + type,
+                    function(
+                        response) {
+                        $('#loader').hide();
+                        if (response.status === 'error') {
+                            notify('error', response.message);
+                            return;
+                        }
 
-                    // Set modal title and form method
-                    $('#addAssetModal .modal-title').text('Edit Asset to Todays Work List');
-                    $('#addAssetForm').attr('action',
-                        "{{ route('technician.update.asset', ':id') }}".replace(':id', id));
-                    $('#method').val('PUT');
+                        // Set modal title and form method
+                        $('#addAssetModal .modal-title').text('Edit Asset to Todays Work List');
+                        $('#addAssetForm').attr('action',
+                            "{{ route('technician.update.asset', ':id') }}".replace(':id', id));
+                        $('#method').val('PUT');
 
-                    // Populate fields
-                    $('#addAssetModal #asset_no').val(response.data.asset_no);
-                    $('#department').val(response.data.department);
-                    $('#next_due_date').val(response.data.next_due_date);
-                    $('#next_due_date').flatpickr({
-                        enableTime: false,
-                        dateFormat: "d-m-Y",
-                        minDate: "today",
-                        maxDate: "today"
-                    });
-                    $('#addAssetModal').modal('show');
-                    console.log(response.data);
-                }).fail(function() {
+                        // Populate fields
+                        $('#addAssetModal #asset_no').val(response.data.asset_no);
+                        $('#department').val(response.data.department);
+                        $('#next_due_date').val(response.data.next_due_date);
+                        $('#type').val(type);
+                        $('#next_due_date').flatpickr({
+                            enableTime: false,
+                            dateFormat: "d-m-Y",
+                            minDate: "today",
+                            maxDate: "today"
+                        });
+                        $('#addAssetModal').modal('show');
+                        console.log(response.data);
+                    }).fail(function() {
                     $('#loader').hide();
                     notify('error', 'Something went wrong. Please try again.');
                 });
@@ -730,7 +734,7 @@
 
             $('#addAssetModal').on('show.bs.modal', function() {
                 $.ajax({
-                    url: "{{ route('technician.schedule.list') }}",
+                    url: "{{ route('technician.schedule.list') }}" + "?type=" + type,
                     type: 'GET',
                     success: function(data) {
                         let select = $('#schedule_id');
@@ -749,7 +753,8 @@
 
             $('body').on('change', '#schedule_id', function() {
                 let id = $(this).val();
-                let url = "{{ route('technician.get.schedule.by.id', ':id') }}".replace(':id', id);
+                let url = "{{ route('technician.get.schedule.by.id', ':id') }}".replace(':id', id) +
+                    "?type=" + type;
 
                 $.ajax({
                     url: url,

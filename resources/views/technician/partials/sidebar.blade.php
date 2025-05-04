@@ -48,8 +48,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('technicians.index.confirm') }}"
-                        class="nav-link menu-link @if (Route::current()->getName() == 'technicians.index.confirm') active @endif"
+                    <a href="javascript:void(0)"
+                        class="nav-link menu-link technicianTMenuBtn @if (Route::current()->getName() == 'technicians.index.confirm') active @endif"
                         aria-expanded="false">
                         <i class="ph ph-gear"></i>
                         <span data-key="t-dashboards">Todays Live Schedule</span>
