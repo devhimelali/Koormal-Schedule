@@ -2,13 +2,14 @@
 
 use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\CronJobController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\TechniciansController;
 use App\Http\Controllers\User\ScheduleController;
-use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [RedirectController::class, 'redirect'])->name('redirect')->middleware('auth');
 Route::get('{role}/profile', [ProfileController::class, 'show'])->name('profile.show');
@@ -45,3 +46,6 @@ Route::get('run-job', function () {
 
     return response()->json(['message' => 'Job started successfully']);
 })->middleware('secure.cron');
+
+// Route::get('/run-db-cron-job', [CronJobController::class, 'runDbCronJob'])->middleware('secure.cron');
+Route::get('/run-db-cron-job', [CronJobController::class, 'runDbCronJob']);

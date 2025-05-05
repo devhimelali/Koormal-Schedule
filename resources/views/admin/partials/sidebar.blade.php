@@ -71,6 +71,14 @@
                         <span data-key="t-contact-4emus">Contact 4Emus</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('database.backups.index') }}"
+                        class="nav-link menu-link @if (Route::current()->getName() == 'database.backups.index') active @endif"
+                        aria-expanded="false">
+                        <i class="ph ph-database"></i>
+                        <span data-key="t-database-backup">Database Backup</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->
