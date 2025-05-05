@@ -22,7 +22,18 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex align-items-center">
-                    <h5 class="card-title mb-0 flex-grow-1">Schedule List</h5>
+                    <div class="flex-grow-1">
+                        <h5 class="card-title mb-0">Schedule List</h5>
+                        @if ($type == 'lt')
+                            <p class="mb-0 fst-italic mt-2">Lighting towers are serviced on run hours. The algorithm
+                                determines
+                                the due
+                                date on an average usage basis over current past usage.
+                                If the Lighting Tower is turned off, out of service or not used the due date may change.
+                            </p>
+                        @endif
+                    </div>
+
                     <div class="flex-shrink-0 d-flex gap-2">
                         <div>
                             <select name="department" id="department" class="form-control select2">
