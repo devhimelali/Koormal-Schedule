@@ -21,7 +21,7 @@
                 <div class="card-body">
                     <p class="fs-5">
                         4EMUS has a strong focus on delivering work processes and methods to carry out heavy industry
-                        related work safely and efficiently. This is not just talk like, we have the software and experience
+                        related work safely and efficiently. This is not just talk, we have the software and experience
                         to actually deliver efficient and safe work practices where Safety and Production combine.
                     </p>
                     <p class="fs-5">
