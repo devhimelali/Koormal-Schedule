@@ -8,7 +8,18 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+
                 <h4 class="mb-sm-0">Schedule {{ $label }}</h4>
+                @if ($type == 'lt')
+                    <p class="mb-0 fst-italic mt-2" style="max-width: 800px;">Lighting towers are serviced on run hours.
+                        The algorithm
+                        determines
+                        the due
+                        date on an average usage basis over current past usage.
+                        If the Lighting Tower is turned off, out of service or not used the due date may change.
+                    </p>
+                @endif
+
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{ route('redirect') }}">Dashboard</a></li>
@@ -24,14 +35,6 @@
                 <div class="card-header d-flex align-items-center">
                     <div class="flex-grow-1">
                         <h5 class="card-title mb-0">Schedule List</h5>
-                        @if ($type == 'lt')
-                            <p class="mb-0 fst-italic mt-2">Lighting towers are serviced on run hours. The algorithm
-                                determines
-                                the due
-                                date on an average usage basis over current past usage.
-                                If the Lighting Tower is turned off, out of service or not used the due date may change.
-                            </p>
-                        @endif
                     </div>
 
                     <div class="flex-shrink-0 d-flex gap-2">
