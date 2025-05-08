@@ -15,20 +15,22 @@ Route::get('/', [RedirectController::class, 'redirect'])->name('redirect')->midd
 Route::get('{role}/profile', [ProfileController::class, 'show'])->name('profile.show');
 
 // ===================== Route for admin, user =====================
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:admin|user|technician'])->group(function () {
     // Schedules routes
     Route::resource('schedules', ScheduleController::class);
     Route::get('schedules/export/pdf', [ScheduleController::class, 'exportPdf'])->name('schedules.export.pdf');
     Route::post('schedules/email', [ScheduleController::class, 'sendEmail'])->name('schedules.email');
 
     // Technicians route with different middleware based on role
-    Route::prefix('technicians')->group(function () {
-        // For admin and user roles
-        Route::middleware(['role:admin|user'])->get('/', [TechniciansController::class, 'index'])->name('technicians.index');
+    // Route::prefix('technicians')->group(function () {
+    //     // For admin and user roles
+    //     Route::middleware(['role:admin|user'])->get('/', [TechniciansController::class, 'index'])->name('technicians.index');
 
-        // For technician role with password confirmation
-        Route::middleware(['role:technician', 'password.confirm'])->get('/with-confirmation', [TechniciansController::class, 'index'])->name('technicians.index.confirm');
-    });
+    //     // For technician role with password confirmation
+    //     Route::middleware(['role:technician', 'password.confirm'])->get('/with-confirmation', [TechniciansController::class, 'index'])->name('technicians.index.confirm');
+    // });
+
+    Route::get('technicians', [TechniciansController::class, 'index'])->name('technicians.index');
 
     Route::get('4emus-contact', function () {
         return view('4emus_contact');

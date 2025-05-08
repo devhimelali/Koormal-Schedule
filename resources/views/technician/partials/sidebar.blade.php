@@ -49,7 +49,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="javascript:void(0)"
-                        class="nav-link menu-link technicianTMenuBtn @if (Route::current()->getName() == 'technicians.index.confirm') active @endif"
+                        class="nav-link menu-link technicianMenuBtn @if (Route::current()->getName() == 'technicians.index') active @endif"
                         aria-expanded="false">
                         <i class="ph ph-gear"></i>
                         <span data-key="t-dashboards">Todays Live Schedule</span>

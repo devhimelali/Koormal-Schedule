@@ -323,9 +323,6 @@
             let isTechnician = @json(auth()->user()->hasRole('technician'));
             let type = "{{ request()->query('type') }}";
             let url = "{{ route('technicians.index') }}" + "?type=" + type;
-            if (isTechnician) {
-                url = "{{ route('technicians.index.confirm') }}" + "?type=" + type;
-            }
 
             let columns = [{
                     data: 'DT_RowIndex',
