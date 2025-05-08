@@ -24,7 +24,7 @@
                                     <div class="mb-4">
                                         <label class="form-label" for="email">Email</label>
                                         <input type="email" class="form-control password-input" id="email"
-                                               name="email" value="{{ old('email') }}" placeholder="Enter Email">
+                                            name="email" value="{{ old('email') }}" placeholder="Enter Email">
                                         <div class="invalid-feedback"></div>
                                     </div>
 
@@ -38,7 +38,7 @@
                             <div class="mt-4 text-center">
                                 <p class="mb-0">Wait, I remember my password...
                                     <a href="{{ route('login') }}"
-                                       class="fw-semibold text-primary text-decoration-underline">
+                                        class="fw-semibold text-primary text-decoration-underline">
                                         Click here
                                     </a>
                                 </p>
@@ -54,8 +54,8 @@
 @endsection
 @section('page-script')
     <script>
-        $(document).ready(function () {
-            $('#forgotPasswordForm').on('submit', function (e) {
+        $(document).ready(function() {
+            $('#forgotPasswordForm').on('submit', function(e) {
                 e.preventDefault();
                 let formData = new FormData(this);
                 $.ajax({
@@ -65,35 +65,39 @@
                     dataType: 'json',
                     contentType: false,
                     processData: false,
-                    beforeSend: function () {
+                    beforeSend: function() {
                         $('.is-invalid').removeClass('is-invalid');
                         $('.invalid-feedback').text('');
                         $('#submitBtn').attr('disabled', true);
-                        $('#submitBtn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...');
+                        $('#submitBtn').html(
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...'
+                            );
                     },
-                    success: function (response) {
+                    success: function(response) {
                         notify('success', 'Password reset link sent successfully');
                         $('.infoBox').addClass('d-none');
                         $('#forgotPasswordForm')[0].reset();
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         if (xhr.status == 422) {
                             let errors = xhr.responseJSON.errors;
-                            $.each(errors, function (key, value) {
+                            $.each(errors, function(key, value) {
                                 notify('error', value);
                                 let input = $('[name="' + key + '"]');
                                 input.addClass('is-invalid');
                                 input.next('.invalid-feedback').text(value);
                             });
                         } else if (xhr.status === 429) {
-                            notify('error', 'Too many failed attempts. Please try again later.');
+                            notify('error',
+                            'Too many failed attempts. Please try again later.');
                         } else if (xhr.status === 500) {
-                            notify('error', 'Something went wrong on our end. Please try again later.');
+                            notify('error',
+                                'Something went wrong on our end. Please try again later.');
                         } else {
                             notify('error', error);
                         }
                     },
-                    complete: function () {
+                    complete: function() {
                         $('#submitBtn').attr('disabled', false);
                         $('#submitBtn').html('Send Reset Link');
                     }

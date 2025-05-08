@@ -181,6 +181,7 @@ class TechniciansController extends Controller
             'next_due_date' => 'required',
             'type' => 'required|in:lv,lt',
             'department' => 'nullable|string',
+            'description' => 'nullable|string',
         ]);
 
         $type = $request->type;
@@ -189,6 +190,7 @@ class TechniciansController extends Controller
             'asset_no' => $request->asset_no,
             'department' => $request->department,
             'next_due_date' => $request->next_due_date,
+            'description' => $request->description,
             'is_technician_entry' => 1,
         ];
 
@@ -249,12 +251,14 @@ class TechniciansController extends Controller
                 'asset_no' => $request->asset_no,
                 'department' => $request->department,
                 'next_due_date' => $request->next_due_date,
+                'description' => $request->description,
             ]);
         } elseif ($type == 'lt') {
             LightingTowerSchedule::find($id)->update([
                 'asset_no' => $request->asset_no,
                 'department' => $request->department,
                 'next_due_date' => $request->next_due_date,
+                'description' => $request->description,
             ]);
         }
 
