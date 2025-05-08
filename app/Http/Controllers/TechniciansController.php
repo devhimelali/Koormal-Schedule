@@ -22,11 +22,11 @@ class TechniciansController extends Controller
         $type = $request->type;
         if ($request->ajax()) {
             if ($type == 'lv') {
-                $data = LightVehicleSchedule::where('is_today_works', 1);
+                $data = LightVehicleSchedule::with('asset.assetEmails.email')->where('is_today_works', 1);
             } elseif ($type == 'lt') {
-                $data = LightingTowerSchedule::where('is_today_works', 1);
+                $data = LightingTowerSchedule::with('asset.assetEmails.email')->where('is_today_works', 1);
             }
-            // $data = Schedule::with('asset.assetEmails.email')->where('is_today_works', 1);
+
             return datatables()->of($data)
                 ->addIndexColumn()
                 ->addColumn('description', function ($row) {
@@ -322,11 +322,11 @@ class TechniciansController extends Controller
         $type = $request->type;
 
         if ($type == 'lv') {
-            $schedule = LightVehicleSchedule::find($id);
+            $schedule = LightVehicleSchedule::with('asset.assetEmails.email')->find($id);
         } elseif ($type == 'lt') {
-            $schedule = LightingTowerSchedule::find($id);
+            $schedule = LightingTowerSchedule::with('asset.assetEmails.email')->find($id);
         }
-
+        // dd($schedule);
         if (!$schedule) {
             return response()->json([
                 'status' => 'error',

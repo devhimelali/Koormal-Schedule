@@ -203,15 +203,18 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="mb-2">
-                            <label for="department" class="form-label">Department</label>
-                            <input type="text" class="form-control" id="department" name="department"
-                                placeholder="Enter department">
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="mb-2">
                             <label for="next_due_date" class="form-label">Next Due Date</label>
                             <input type="text" class="form-control" id="next_due_date" name="next_due_date">
                             <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="mb-2">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea name="description" id="description" class="form-control" rows="5"></textarea>
+                        </div>
+                        <div class="mb-3 email_wrapper d-none">
+                            <label for="assetEmails" class="form-label">Email Addresses</label>
+                            <input type="text" name="emails[]" id="assetEmails" class="form-control">
+                            {{-- <select name="emails[]" id="assetEmails" class="form-control" multiple></select> --}}
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -730,7 +733,7 @@
 
                         // Populate fields
                         $('#addAssetModal #asset_no').val(response.data.asset_no);
-                        $('#department').val(response.data.department);
+                        $('#description').val(response.data.description);
                         $('#next_due_date').val(response.data.next_due_date);
                         $('#type').val(type);
                         $('#next_due_date').flatpickr({
@@ -781,7 +784,7 @@
                     success: function(response) {
                         if (response.status === 'success') {
                             $('#addAssetModal #asset_no').val(response.data.asset_no);
-                            $('#department').val(response.data.department);
+                            $('#description').val(response.data.description);
                             $('#next_due_date').flatpickr({
                                 enableTime: false,
                                 dateFormat: "d-m-Y",
@@ -789,6 +792,17 @@
                                 minDate: "today",
                                 maxDate: "today"
                             });
+                            $('.email_wrapper').removeClass('d-none');
+                            if (response.data.asset.asset_emails.length > 0) {
+                                let emails = [];
+                                response.data.asset.asset_emails.forEach(function(item) {
+                                    if (item.email && item.email.email) {
+                                        emails.push(item.email.email);
+                                    }
+                                });
+                                $('#assetEmails').val(emails.join(
+                                    ', '));
+                            }
                         } else {
                             notify('error', response.message);
                         }
