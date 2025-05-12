@@ -65,7 +65,12 @@
                         </div>
                         <div>
                             <button type="button" class="btn btn-danger" id="exportPdf">
-                                <i class="ri-file-pdf-fill"></i> PDF
+                                <i class="ri-file-pdf-2-line"></i> PDF
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-success" id="exportExcel">
+                                <i class="ri-file-excel-2-line"></i> Excel
                             </button>
                         </div>
                     </div>
@@ -223,6 +228,20 @@
                 let time_frame = $('#date-range').val();
 
                 let url = "{{ route('schedules.export.pdf') }}" +
+                    "?type=" + encodeURIComponent(type) +
+                    "&department=" + encodeURIComponent(department) +
+                    "&asset_no=" + encodeURIComponent(asset_no) +
+                    "&time_frame=" + encodeURIComponent(time_frame);
+
+                window.open(url, '_blank');
+            });
+
+            $('#exportExcel').on('click', function() {
+                let department = $('#department').val();
+                let asset_no = $('#asset_no').val();
+                let time_frame = $('#date-range').val();
+
+                let url = "{{ route('schedules.export.excel') }}" +
                     "?type=" + encodeURIComponent(type) +
                     "&department=" + encodeURIComponent(department) +
                     "&asset_no=" + encodeURIComponent(asset_no) +

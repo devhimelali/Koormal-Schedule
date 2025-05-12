@@ -19,6 +19,7 @@ Route::middleware(['auth', 'verified', 'role:admin|user|technician'])->group(fun
     // Schedules routes
     Route::resource('schedules', ScheduleController::class);
     Route::get('schedules/export/pdf', [ScheduleController::class, 'exportPdf'])->name('schedules.export.pdf');
+    Route::get('schedules/export/excel', [ScheduleController::class, 'exportExcel'])->name('schedules.export.excel');
     Route::post('schedules/email', [ScheduleController::class, 'sendEmail'])->name('schedules.email');
     Route::get('technicians', [TechniciansController::class, 'index'])->name('technicians.index');
     Route::get('4emus-contact', function () {
