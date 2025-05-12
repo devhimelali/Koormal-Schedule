@@ -32,6 +32,13 @@
                                         Add Asset
                                     </button>
                                 @endif
+                                <div>
+                                    <select name="shift" class="form-select" id="shift">
+                                        <option value="">Both Shift</option>
+                                        <option value="Dayshift">Day Shift</option>
+                                        <option value="Nightshift">Night Shift</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
@@ -403,6 +410,16 @@
                 $('#scheduleType').val(type);
                 $('#scheduleStatus').val($(this).data('status'));
                 $('#statusModal').modal('show');
+            });
+
+            function filterData() {
+                let shift = $('#shift').val();
+                let url = "{{ route('technicians.index') }}" + "?type=" + type + "&shift=" + shift;
+                table.ajax.url(url).load();
+            }
+
+            $('#shift').on('change', function() {
+                filterData();
             });
 
             $('#statusForm').on('submit', function(e) {

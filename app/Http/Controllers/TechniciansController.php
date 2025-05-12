@@ -27,6 +27,10 @@ class TechniciansController extends Controller
                 $data = LightingTowerSchedule::with('asset.assetEmails.email')->where('is_today_works', 1);
             }
 
+            if ($request->shift) {
+                $data = $data->where('description', 'like', '%' . $request->shift . '%');
+            }
+
             return datatables()->of($data)
                 ->addIndexColumn()
                 ->addColumn('description', function ($row) {
