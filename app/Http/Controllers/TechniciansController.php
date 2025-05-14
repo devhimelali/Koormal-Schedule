@@ -99,8 +99,7 @@ class TechniciansController extends Controller
 
     public function loadTodayWorks(Request $request)
     {
-        $today = date('d-m-Y');
-
+        $today = Carbon::now()->timezone(config('app.timezone'))->format('d-m-Y');
         $models = [
             'lv' => LightVehicleSchedule::class,
             'lt' => LightingTowerSchedule::class,
