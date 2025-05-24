@@ -133,15 +133,6 @@
         </div>
     </div>
 
-    {{-- <div class="customizer-setting d-none d-md-block">
-        <div class="p-2 shadow-lg btn btn-info text-uppercase rounded-end-0" data-bs-toggle="offcanvas"
-            data-bs-target="#theme-settings-offcanvas" aria-controls="theme-settings-offcanvas">
-            <i class="mb-1 bi bi-gear"></i> Customizer
-        </div>
-    </div> --}}
-
-    <!-- Theme Settings -->
-    {{-- @include('layouts.partials.theme-setting') --}}
 
     <!-- JAVASCRIPT -->
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -149,36 +140,60 @@
     <script src="{{ asset('assets/libs/toastr/toastr.min.js') }}"></script>
     <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.all.min.js') }}"></script>
     <script>
-        $('body').on('click', '.scheduleMenuBtn', function() {
+        $('body').on('click', '.scheduleMenuBtn', function () {
             Swal.fire({
                 title: 'Select Asset Type',
-                text: "Nothing you choose here will affect the schedule.",
                 icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Light Vehicles',
-                cancelButtonText: 'Lighting Towers',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "{{ route('schedules.index', ['type' => 'lv']) }}";
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    window.location.href = "{{ route('schedules.index', ['type' => 'lt']) }}";
+                html: `
+                 <p>Nothing you choose here will affect the schedule.</p>
+                <button class="swal2-confirm btn-option btn btn-primary" data-value="light_vehicle">Light Vehicles</button>
+                <button class="swal2-confirm btn-option btn btn-secondary" data-value="lighting_tower">Lighting Towers</button>
+                <button class="swal2-confirm btn-option btn btn-success" data-value="truck">Truck</button>
+              `,
+                showConfirmButton: false,
+                didOpen: () => {
+                    document.querySelectorAll('.btn-option').forEach(button => {
+                        button.addEventListener('click', () => {
+                            const selected = button.getAttribute('data-value');
+                            Swal.close();
+                            if (selected === 'light_vehicle') {
+                                window.location.href = "{{ route('schedules.index', ['type' => 'lv']) }}";
+                            } else if (selected === 'lighting_tower') {
+                                window.location.href = "{{ route('schedules.index', ['type' => 'lt']) }}";
+                            } else if (selected === 'truck') {
+                                window.location.href = "{{ route('schedules.index', ['type' => 'tk']) }}";
+                            }
+                        });
+                    });
                 }
             });
         });
 
-        $('body').on('click', '.technicianMenuBtn', function() {
+        $('body').on('click', '.technicianMenuBtn', function () {
             Swal.fire({
                 title: 'Select Asset Type',
-                text: "Nothing you choose here will affect the todays live schedule.",
                 icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Light Vehicles',
-                cancelButtonText: 'Lighting Towers',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "{{ route('technicians.index', ['type' => 'lv']) }}";
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    window.location.href = "{{ route('technicians.index', ['type' => 'lt']) }}";
+                html: `
+                 <p>Nothing you choose here will affect today's live schedule.</p>
+                <button class="swal2-confirm btn-option btn btn-primary" data-value="light_vehicle">Light Vehicles</button>
+                <button class="swal2-confirm btn-option btn btn-secondary" data-value="lighting_tower">Lighting Towers</button>
+                <button class="swal2-confirm btn-option btn btn-success" data-value="truck">Truck</button>
+              `,
+                showConfirmButton: false,
+                didOpen: () => {
+                    document.querySelectorAll('.btn-option').forEach(button => {
+                        button.addEventListener('click', () => {
+                            const selected = button.getAttribute('data-value');
+                            Swal.close();
+                            if (selected === 'light_vehicle') {
+                                window.location.href = "{{ route('technicians.index', ['type' => 'lv']) }}";
+                            } else if (selected === 'lighting_tower') {
+                                window.location.href = "{{ route('technicians.index', ['type' => 'lt']) }}";
+                            } else if (selected === 'truck') {
+                                window.location.href = "{{ route('technicians.index', ['type' => 'tk']) }}";
+                            }
+                        });
+                    });
                 }
             });
         });

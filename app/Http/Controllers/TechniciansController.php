@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LightingTowerAsset;
 use App\Models\LightVehicleAsset;
+use App\Models\TruckSchedule;
 use Carbon\Carbon;
 use App\Models\Asset;
 use App\Models\Schedule;
@@ -20,15 +21,12 @@ class TechniciansController extends Controller
     public function index(Request $request)
     {
         $type = $request->type;
+        $model = $this->getScheduleModel($type);
         if ($request->ajax()) {
-            if ($type == 'lv') {
-                $data = LightVehicleSchedule::with('asset.assetEmails.email')->where('is_today_works', 1);
-            } elseif ($type == 'lt') {
-                $data = LightingTowerSchedule::with('asset.assetEmails.email')->where('is_today_works', 1);
-            }
+            $data = $model::with('asset.assetEmails.email')->where('is_today_works', 1);
 
             if ($request->shift) {
-                $data = $data->where('description', 'like', '%' . $request->shift . '%');
+                $data = $data->where('description', 'like', '%'.$request->shift.'%');
             }
 
             return datatables()->of($data)
@@ -54,18 +52,18 @@ class TechniciansController extends Controller
                     }
                     $assetEmails = implode(', ', $emailList);
                     $btn = '<div class="btn-group" role="group">';
-                    $btn .= '<a href="javascript:void(0)" class="changeStatus btn btn-primary btn-sm" data-id="' . $row->id . '" data-status="' . $row->status . '">
+                    $btn .= '<a href="javascript:void(0)" class="changeStatus btn btn-primary btn-sm" data-id="'.$row->id.'" data-status="'.$row->status.'">
                     <i class="ri-pencil-ruler-line"></i>
                     Change Status</a>
-                    <a href="javascript:void(0)" class="btn btn-secondary btn-sm sendEmail" data-asset_emails="' . $assetEmails . '" data-asset_no="' . $row->asset_no . '" data-status="' . $row->status . '" data-next_due_date="' . $row->next_due_date . '" data-description="' . $row->description . '">
+                    <a href="javascript:void(0)" class="btn btn-secondary btn-sm sendEmail" data-asset_emails="'.$assetEmails.'" data-asset_no="'.$row->asset_no.'" data-status="'.$row->status.'" data-next_due_date="'.$row->next_due_date.'" data-description="'.$row->description.'">
                     <i class="ri-mail-send-line"></i>
                     Send Email</a>';
 
                     if ($row->is_technician_entry && Auth::user()->roles->first()->name == 'technician') {
-                        $btn .= '<a href="javascript:void(0)" class="editAsset btn btn-warning btn-sm" data-id="' . $row->id . '">
+                        $btn .= '<a href="javascript:void(0)" class="editAsset btn btn-warning btn-sm" data-id="'.$row->id.'">
                         <i class="ri-edit-line"></i>
                         Edit</a>';
-                        $btn .= '<a href="javascript:void(0)" class="deleteAsset btn btn-danger btn-sm" data-id="' . $row->id . '">
+                        $btn .= '<a href="javascript:void(0)" class="deleteAsset btn btn-danger btn-sm" data-id="'.$row->id.'">
                         <i class="ri-delete-bin-line"></i>
                         Delete</a>';
                     }
@@ -81,15 +79,10 @@ class TechniciansController extends Controller
     public function changeStatus(Request $request)
     {
         $type = $request->type;
-        if ($type == 'lv') {
-            $schedule = LightVehicleSchedule::find($request->id);
-            $schedule->status = $request->status;
-            $schedule->save();
-        } elseif ($type == 'lt') {
-            $schedule = LightingTowerSchedule::find($request->id);
-            $schedule->status = $request->status;
-            $schedule->save();
-        }
+        $model = $this->getScheduleModel($type);
+        $schedule = $model::find($request->id);
+        $schedule->status = $request->status;
+        $schedule->save();
 
         return response()->json([
             'status' => 'success',
@@ -100,12 +93,8 @@ class TechniciansController extends Controller
     public function loadTodayWorks(Request $request)
     {
         $today = Carbon::now()->timezone(config('app.timezone'))->format('d-m-Y');
-        $models = [
-            'lv' => LightVehicleSchedule::class,
-            'lt' => LightingTowerSchedule::class,
-        ];
 
-        $model = $models[$request->type];
+        $model = $this->getScheduleModel($request->type);
 
         // Reset all today works
         $model::where('is_today_works', 1)->update(['is_today_works' => 0]);
@@ -165,7 +154,7 @@ class TechniciansController extends Controller
 
         foreach ($request->emails as $email) {
             $body = '<div style="margin-top: 20px;">';
-            $body .= '<span style="background-color: ' . $statusData['background'] . ' ; padding: 4px 8px; border-radius: 2px;border: 1px solid #000; color: ' . $statusData['color'] . '">' . $statusData['message'] . '</span>';
+            $body .= '<span style="background-color: '.$statusData['background'].' ; padding: 4px 8px; border-radius: 2px;border: 1px solid #000; color: '.$statusData['color'].'">'.$statusData['message'].'</span>';
             $body .= $request->message;
             $body .= '</div>';
             Mail::to($email)->send(new WorkStatusNotifyMail($request->subject, $body));
@@ -189,47 +178,34 @@ class TechniciansController extends Controller
 
         $type = $request->type;
 
-        $commonData = [
+        $model = $this->getScheduleModel($type);
+
+        $model::create([
             'asset_no' => $request->asset_no,
             'department' => $request->department,
             'next_due_date' => $request->next_due_date,
             'description' => $request->description,
             'is_technician_entry' => 1,
-        ];
-
-        $scheduleData = $commonData + [
             'status' => 'no status yet',
             'is_today_works' => 1,
-        ];
-
-        if ($type == 'lv') {
-            LightVehicleAsset::create($commonData);
-            LightVehicleSchedule::create($scheduleData);
-        } elseif ($type == 'lt') {
-            LightingTowerAsset::create($commonData);
-            LightingTowerSchedule::create($scheduleData);
-        }
+        ]);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Asset added successfully.'
+            'message' => 'Schedule added successfully.'
         ]);
     }
 
     public function editAsset(Request $request, $id)
     {
         $type = $request->type;
-
-        if ($type == 'lv') {
-            $asset = LightVehicleSchedule::find($id);
-        } elseif ($type == 'lt') {
-            $asset = LightingTowerSchedule::find($id);
-        }
+        $model = $this->getScheduleModel($type);
+        $asset = $model::find($id);
 
         if (!$asset) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Asset not found.'
+                'message' => 'Schedule not found.'
             ]);
         }
 
@@ -249,41 +225,48 @@ class TechniciansController extends Controller
 
         $type = $request->type;
 
-        if ($type == 'lv') {
-            LightVehicleSchedule::find($id)->update([
-                'asset_no' => $request->asset_no,
-                'department' => $request->department,
-                'next_due_date' => $request->next_due_date,
-                'description' => $request->description,
-            ]);
-        } elseif ($type == 'lt') {
-            LightingTowerSchedule::find($id)->update([
-                'asset_no' => $request->asset_no,
-                'department' => $request->department,
-                'next_due_date' => $request->next_due_date,
-                'description' => $request->description,
+        $model = $this->getScheduleModel($type);
+
+        $schedule = $model::find($id);
+
+        if (!$schedule) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Schedule not found.'
             ]);
         }
 
+        $schedule->update([
+            'asset_no' => $request->asset_no,
+            'department' => $request->department,
+            'next_due_date' => $request->next_due_date,
+            'description' => $request->description,
+        ]);
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Asset updated successfully.'
+            'message' => 'Schedule updated successfully.'
         ]);
     }
 
     public function deleteAsset(Request $request, $id)
     {
         $type = $request->type;
+        $model = $this->getScheduleModel($type);
+        $schedule = $model::find($id);
 
-        if ($type == 'lv') {
-            LightVehicleSchedule::find($id)->delete();
-        } elseif ($type == 'lt') {
-            LightingTowerSchedule::find($id)->delete();
+        if (!$schedule) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Schedule not found.'
+            ]);
         }
+
+        $schedule->delete();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Asset deleted successfully.'
+            'message' => 'Schedule deleted successfully.'
         ]);
     }
 
@@ -297,10 +280,10 @@ class TechniciansController extends Controller
             $originName = $request->file('upload')->getClientOriginalName();
             $fileName = pathinfo($originName, PATHINFO_FILENAME);
             $extension = $request->file('upload')->getClientOriginalExtension();
-            $fileName = $fileName . '_' . time() . '.' . $extension;
+            $fileName = $fileName.'_'.time().'.'.$extension;
 
             $request->file('upload')->move(public_path('uploads/emails'), $fileName);
-            $url = asset('uploads/emails/' . $fileName);
+            $url = asset('uploads/emails/'.$fileName);
 
             return response()->json([
                 'fileName' => $fileName,
@@ -316,24 +299,16 @@ class TechniciansController extends Controller
     public function scheduleList(Request $request)
     {
         $type = $request->type;
-
-        if ($type == 'lv') {
-            return LightVehicleSchedule::select('id', 'asset_no')->orderBy('asset_no')->get();
-        } elseif ($type == 'lt') {
-            return LightingTowerSchedule::select('id', 'asset_no')->orderBy('asset_no')->get();
-        }
+        $model = $this->getScheduleModel($type);
+        return $model::select('id', 'asset_no')->orderBy('asset_no')->get();
     }
 
     public function getScheduleById(Request $request, $id)
     {
         $type = $request->type;
+        $model = $this->getScheduleModel($type);
+        $schedule = $model::with('asset.assetEmails.email')->find($id);
 
-        if ($type == 'lv') {
-            $schedule = LightVehicleSchedule::with('asset.assetEmails.email')->find($id);
-        } elseif ($type == 'lt') {
-            $schedule = LightingTowerSchedule::with('asset.assetEmails.email')->find($id);
-        }
-        // dd($schedule);
         if (!$schedule) {
             return response()->json([
                 'status' => 'error',
@@ -345,5 +320,14 @@ class TechniciansController extends Controller
             'status' => 'success',
             'data' => $schedule
         ]);
+    }
+
+    protected function getScheduleModel($type): string
+    {
+        return match ($type) {
+            'lv' => LightVehicleSchedule::class,
+            'lt' => LightingTowerSchedule::class,
+            'tk' => TruckSchedule::class,
+        };
     }
 }

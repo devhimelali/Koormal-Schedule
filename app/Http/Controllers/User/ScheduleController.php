@@ -9,6 +9,7 @@ use App\Models\LightingTowerAsset;
 use App\Models\LightingTowerSchedule;
 use App\Models\LightVehicleSchedule;
 use App\Models\Schedule;
+use App\Models\TruckSchedule;
 use Illuminate\Http\Request;
 use App\Mail\ScheduleListMail;
 use App\Models\AssetTimeFrame;
@@ -26,12 +27,9 @@ class ScheduleController extends Controller
     public function index(Request $request)
     {
         $type = $request->type;
+        $model = $this->getScheduleModel($type);
         if ($request->ajax()) {
-            if ($type == 'lv') {
-                $data = LightVehicleSchedule::where('is_technician_entry', 0);
-            } elseif ($type == 'lt') {
-                $data = LightingTowerSchedule::where('is_technician_entry', 0);
-            }
+            $data = $model::where('is_technician_entry', 0);
 
             if (!empty($request->department)) {
                 $data = $data->where('department', $request->department);
@@ -56,25 +54,14 @@ class ScheduleController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
-        if ($type == 'lv') {
-            $departments = LightVehicleSchedule::where('department', '!=', null)
-                ->orderBy('department', 'asc')
-                ->distinct()
-                ->pluck('department');
 
-            $assets = LightVehicleAsset::orderBy('asset_no', 'asc')
-                ->distinct()
-                ->pluck('asset_no');
-        } elseif ($type == 'lt') {
-            $departments = LightingTowerSchedule::where('department', '!=', null)
-                ->orderBy('department', 'asc')
-                ->distinct()
-                ->pluck('department');
-
-            $assets = LightingTowerAsset::orderBy('asset_no', 'asc')
-                ->distinct()
-                ->pluck('asset_no');
-        }
+        $departments = $model::where('department', '!=', null)
+            ->orderBy('department', 'asc')
+            ->distinct()
+            ->pluck('department');
+        $assets = $model::orderBy('asset_no', 'asc')
+            ->distinct()
+            ->pluck('asset_no');
 
         return view('user.schedule.index', compact('assets', 'departments'));
     }
@@ -82,13 +69,10 @@ class ScheduleController extends Controller
     public function exportPdf(Request $request)
     {
         $type = $request->type;
-        if ($type == 'lv') {
-            $schedules = LightVehicleSchedule::where('is_technician_entry', 0)
-                ->orderByRaw("STR_TO_DATE(next_due_date, '%d-%m-%Y') ASC");;
-        } elseif ($type == 'lt') {
-            $schedules = LightingTowerSchedule::where('is_technician_entry', 0)
-                ->orderByRaw("STR_TO_DATE(next_due_date, '%d-%m-%Y') ASC");;
-        }
+        $model = $this->getScheduleModel($type);
+
+        $schedules = $model::where('is_technician_entry', 0)
+            ->orderByRaw("STR_TO_DATE(next_due_date, '%d-%m-%Y') ASC");;
 
         if (!empty($request->department)) {
             $schedules = $schedules->where('department', $request->department);
@@ -146,11 +130,8 @@ class ScheduleController extends Controller
         }
 
         $type = $request->type;
-        if ($type == 'lv') {
-            $schedules = LightVehicleSchedule::where('is_technician_entry', 0);
-        } elseif ($type == 'lt') {
-            $schedules = LightingTowerSchedule::where('is_technician_entry', 0);
-        }
+        $model = $this->getScheduleModel($type);
+        $schedules = $model::where('is_technician_entry', 0);
 
         if (!empty($request->department)) {
             $schedules = $schedules->where('department', $request->department);
@@ -177,16 +158,16 @@ class ScheduleController extends Controller
     public function exportExcel(Request $request)
     {
         $type = $request->type;
-        $sheetName = $type ? 'Light Vehicle Schedule' : 'Lighting Tower Schedule';
-        if ($type == 'lv') {
-            $schedules = LightVehicleSchedule::where('is_technician_entry', 0)
-                ->orderByRaw("STR_TO_DATE(next_due_date, '%d-%m-%Y') ASC");
-        } elseif ($type == 'lt') {
-            $schedules = LightingTowerSchedule::where('is_technician_entry', 0)
-                ->orderByRaw("STR_TO_DATE(next_due_date, '%d-%m-%Y') ASC");
-        } else {
-            return response()->json(['error' => 'Invalid type'], 400);
-        }
+        $model = $this->getScheduleModel($type);
+
+        $sheetName = match ($type) {
+            'lv' => 'Light Vehicle Schedule',
+            'lt' => 'Lighting Tower Schedule',
+            'tk' => 'Truck Schedule',
+        };
+
+        $schedules = $model::where('is_technician_entry', 0)
+            ->orderByRaw("STR_TO_DATE(next_due_date, '%d-%m-%Y') ASC");
 
         if (!empty($request->department)) {
             $schedules = $schedules->where('department', $request->department);
@@ -206,5 +187,14 @@ class ScheduleController extends Controller
         $schedules = $schedules->get();
 
         return Excel::download(new ScheduleExport($schedules, $sheetName), 'schedules-'.time().'.xlsx');
+    }
+
+    protected function getScheduleModel($type): string
+    {
+        return match ($type) {
+            'lv' => LightVehicleSchedule::class,
+            'lt' => LightingTowerSchedule::class,
+            'tk' => TruckSchedule::class,
+        };
     }
 }
