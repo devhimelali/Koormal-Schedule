@@ -29,7 +29,9 @@ class ScheduleController extends Controller
         $type = $request->type;
         $model = $this->getScheduleModel($type);
         if ($request->ajax()) {
-            $data = $model::where('is_technician_entry', 0);
+            $data = $model::where('is_technician_entry', 0)
+                ->whereNotNull('next_due_date')
+                ->orderByRaw("STR_TO_DATE(next_due_date, '%d-%m-%Y') ASC");
 
             if (!empty($request->department)) {
                 $data = $data->where('department', $request->department);
