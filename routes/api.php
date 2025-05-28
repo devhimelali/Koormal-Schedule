@@ -11,10 +11,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('get-all-assets', function () {
-    $assets = collect()
-        ->merge(LightVehicleAsset::pluck('asset_no'))
-        ->merge(LightingTowerAssetAlias::pluck('asset_no'))
-        ->merge(TruckAsset::pluck('asset_no'));
+    $assets = LightVehicleAsset::pluck('asset_no');
 
     return response()->json([
         'status' => 'success',
