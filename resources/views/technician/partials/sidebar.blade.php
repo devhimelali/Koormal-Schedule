@@ -74,37 +74,43 @@
                                    data-key="t-company">Light Vehicle Prestart manual prestart</a>
                             </li>
                             <li class="nav-item">
-                                <a href=""
+                                <a href="https://forms.4emus.com/backhoe-prestart-schedule-version"
+                                   target="_blank"
                                    class="nav-link"
                                    data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="right"
                                    data-key="t-company">Backhoe Prestart or upload manual prestart</a>
                             </li>
                             <li class="nav-item">
-                                <a href=""
+                                <a href="https://forms.4emus.com/bobcat-prestart-schedule-version"
+                                   target="_blank"
                                    class="nav-link"
                                    data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="right"
                                    data-key="t-company">Bobcat Prestart or upload manual prestart</a>
                             </li>
                             <li class="nav-item">
-                                <a href=""
+                                <a href="https://forms.4emus.com/dozer-prestart-schedule-version"
+                                   target="_blank"
                                    class="nav-link"
                                    data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="right"
                                    data-key="t-company">Dozer Prestart or upload manual prestart</a>
                             </li>
                             <li class="nav-item">
-                                <a href=""
+                                <a href="https://forms.4emus.com/excavator-prestart-schedule-version"
+                                   target="_blank"
                                    class="nav-link"
                                    data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="right"
                                    data-key="t-company">Excavator Prestart or upload manual prestart</a>
                             </li>
                             <li class="nav-item">
-                                <a href=""
+                                <a href="https://forms.4emus.com/forklift-prestart-schedule-version"
+                                   target="_blank"
                                    class="nav-link"
                                    data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="right"
                                    data-key="t-company">Forklift Prestart or upload manual prestart</a>
                             </li>
                             <li class="nav-item">
-                                <a href=""
+                                <a href="https://forms.4emus.com/loader-prestart-schedule-version"
+                                   target="_blank"
                                    class="nav-link"
                                    data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="right"
                                    data-key="t-company">Loader Prestart or upload manual prestart</a>
