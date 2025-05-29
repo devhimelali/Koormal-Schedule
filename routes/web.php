@@ -23,6 +23,7 @@ Route::middleware(['auth', 'verified', 'role:admin|user|technician'])->group(fun
     Route::get('schedules/export/excel', [ScheduleController::class, 'exportExcel'])->name('schedules.export.excel');
     Route::post('schedules/email', [ScheduleController::class, 'sendEmail'])->name('schedules.email');
     Route::get('technicians', [TechniciansController::class, 'index'])->name('technicians.index');
+    Route::post('send-email', [TechniciansController::class, 'sendEmail'])->name('technician.send.email');
     Route::get('4emus-contact', function () {
         return view('4emus_contact');
     })->name('4emus.contact');
