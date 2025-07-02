@@ -9,7 +9,7 @@
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
 
-                <h4 class="mb-sm-0">Schedule {{ $label }}</h4>
+                <h4 class="mb-sm-0">Koormal-Schedule</h4>
                 @if ($type == 'lt')
                     <p class="mb-0 fst-italic mt-2" style="max-width: 800px;">Lighting towers are serviced on run hours.
                         The algorithm
