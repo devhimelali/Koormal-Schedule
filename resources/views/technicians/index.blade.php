@@ -71,6 +71,14 @@
                                         style="background-color: #00ffff; border: 1px solid #000;">Work completed, ready for
                                         pickup</span>
                                 </li>
+                                <li>
+                                    <span class="badge-status"
+                                        style="background-color: #C4A484; border: 1px solid #000;">Mud buildup Unsafe</span>
+                                </li>
+                                <li>
+                                    <span class="badge-status"
+                                        style="background-color: #FFD580; border: 1px solid #000;">Late Delivery</span>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -134,6 +142,8 @@
                                 <option value="tagged out – further work found">Tagged out – further work found</option>
                                 <option value="work completed, ready for pickup">Work completed, ready for pickup</option>
                                 <option value="delivered">Delivered</option>
+                                <option value="mud buildup unsafe">Mud buildup Unsafe</option>
+                                <option value="late delivery">Late Delivery</option>
                             </select>
                         </div>
                     </div>
@@ -221,7 +231,6 @@
                         <div class="mb-3 email_wrapper d-none">
                             <label for="assetEmails" class="form-label">Email Addresses</label>
                             <input type="text" name="emails[]" id="assetEmails" class="form-control">
-                            {{-- <select name="emails[]" id="assetEmails" class="form-control" multiple></select> --}}
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -397,6 +406,14 @@
                             $(row).css('background-color', '#ff00ff');
                             $(row).find('td').css('color', '#ffffff');
                             break;
+                        case 'mud buildup unsafe':
+                            $(row).css('background-color', '#C4A484');
+                            $(row).find('td').css('color', '#000000');
+                            break;
+                        case 'late delivery':
+                            $(row).css('background-color', '#FFD580');
+                            $(row).find('td').css('color', '#000000');
+                            break;
                         case 'no status yet':
                         default:
                             $(row).css('background-color', '#ffffff');
@@ -521,6 +538,16 @@
                         background: '#00ffff',
                         color: '#000000',
                         message: 'Work completed, ready for pickup',
+                    },
+                    'mud buildup unsafe': {
+                        background: '#C4A484',
+                        color: '#000000',
+                        message: 'Mud Buildup Unsafe',
+                    },
+                    'late delivery': {
+                        background: '#FFD580',
+                        color: '#000000',
+                        message: 'Late Delivery',
                     }
                 };
 
