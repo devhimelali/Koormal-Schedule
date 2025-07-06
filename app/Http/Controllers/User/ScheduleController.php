@@ -3,23 +3,17 @@
 namespace App\Http\Controllers\User;
 
 use App\Exports\ScheduleExport;
-use App\Models\Asset;
-use App\Models\Email;
-use App\Models\LightingTowerAsset;
 use App\Models\LightingTowerSchedule;
 use App\Models\LightVehicleSchedule;
-use App\Models\Schedule;
 use App\Models\TruckSchedule;
 use Illuminate\Http\Request;
-use App\Mail\ScheduleListMail;
-use App\Models\AssetTimeFrame;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\DataTables;
 use App\Jobs\SendScheduleEmailJob;
 use App\Http\Controllers\Controller;
-use App\Models\LightVehicleAsset;
-use Illuminate\Support\Facades\Mail;
+use App\Models\ForkliftManitouSchedule;
+use App\Models\PumpSchedule;
 use Illuminate\Support\Facades\Validator;
 
 class ScheduleController extends Controller
@@ -47,8 +41,10 @@ class ScheduleController extends Controller
                     $startDate = $dates[0];
                     $endDate = $dates[1];
 
-                    $data = $data->whereRaw("STR_TO_DATE(next_due_date, '%d-%m-%Y') BETWEEN STR_TO_DATE(?, '%d-%m-%Y') AND STR_TO_DATE(?, '%d-%m-%Y')",
-                        [$startDate, $endDate]);
+                    $data = $data->whereRaw(
+                        "STR_TO_DATE(next_due_date, '%d-%m-%Y') BETWEEN STR_TO_DATE(?, '%d-%m-%Y') AND STR_TO_DATE(?, '%d-%m-%Y')",
+                        [$startDate, $endDate]
+                    );
                 }
             }
 
@@ -74,7 +70,8 @@ class ScheduleController extends Controller
         $model = $this->getScheduleModel($type);
 
         $schedules = $model::where('is_technician_entry', 0)
-            ->orderByRaw("STR_TO_DATE(next_due_date, '%d-%m-%Y') ASC");;
+            ->orderByRaw("STR_TO_DATE(next_due_date, '%d-%m-%Y') ASC");
+        ;
 
         if (!empty($request->department)) {
             $schedules = $schedules->where('department', $request->department);
@@ -86,7 +83,7 @@ class ScheduleController extends Controller
 
         if (!empty($request->time_frame)) {
             $today = date('Y-m-d');
-            $next_due_date = date('Y-m-d', strtotime($today.' + '.$request->time_frame.' days'));
+            $next_due_date = date('Y-m-d', strtotime($today . ' + ' . $request->time_frame . ' days'));
 
             $schedules = $schedules->whereRaw('STR_TO_DATE(next_due_date, "%d-%m-%Y") = ?', [$next_due_date]);
         }
@@ -107,7 +104,7 @@ class ScheduleController extends Controller
                 'isFontSubsettingEnabled' => true,
             ]);
 
-        return $pdf->stream('schedules-'.time().'.pdf');
+        return $pdf->stream('schedules-' . time() . '.pdf');
     }
 
     public function sendEmail(Request $request)
@@ -144,7 +141,7 @@ class ScheduleController extends Controller
         }
         if (!empty($request->time_frame)) {
             $today = date('Y-m-d');
-            $next_due_date = date('Y-m-d', strtotime($today.' + '.$request->time_frame.' days'));
+            $next_due_date = date('Y-m-d', strtotime($today . ' + ' . $request->time_frame . ' days'));
 
             $schedules = $schedules->whereRaw('STR_TO_DATE(next_due_date, "%d-%m-%Y") = ?', [$next_due_date]);
         }
@@ -166,6 +163,8 @@ class ScheduleController extends Controller
             'lv' => 'Light Vehicle Schedule',
             'lt' => 'Lighting Tower Schedule',
             'tk' => 'Truck Schedule',
+            'fm' => 'Forklift Schedule',
+            'pm' => 'Pump Schedule',
         };
 
         $schedules = $model::where('is_technician_entry', 0)
@@ -181,14 +180,14 @@ class ScheduleController extends Controller
 
         if (!empty($request->time_frame)) {
             $today = date('Y-m-d');
-            $next_due_date = date('Y-m-d', strtotime($today.' + '.$request->time_frame.' days'));
+            $next_due_date = date('Y-m-d', strtotime($today . ' + ' . $request->time_frame . ' days'));
 
             $schedules = $schedules->whereRaw('STR_TO_DATE(next_due_date, "%d-%m-%Y") = ?', [$next_due_date]);
         }
 
         $schedules = $schedules->get();
 
-        return Excel::download(new ScheduleExport($schedules, $sheetName), 'schedules-'.time().'.xlsx');
+        return Excel::download(new ScheduleExport($schedules, $sheetName), 'schedules-' . time() . '.xlsx');
     }
 
     protected function getScheduleModel($type): string
@@ -197,6 +196,8 @@ class ScheduleController extends Controller
             'lv' => LightVehicleSchedule::class,
             'lt' => LightingTowerSchedule::class,
             'tk' => TruckSchedule::class,
+            'fm' => ForkliftManitouSchedule::class,
+            'pm' => PumpSchedule::class,
         };
     }
 }
