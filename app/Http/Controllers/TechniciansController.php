@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LightingTowerAsset;
-use App\Models\LightVehicleAsset;
-use App\Models\TruckSchedule;
 use Carbon\Carbon;
-use App\Models\Asset;
-use App\Models\Schedule;
+use App\Models\PumpSchedule;
 use Illuminate\Http\Request;
+use App\Models\TruckSchedule;
 use App\Mail\WorkStatusNotifyMail;
-use Illuminate\Support\Facades\DB;
 use App\Models\LightVehicleSchedule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Models\LightingTowerSchedule;
+use App\Models\ForkliftManitouSchedule;
 
 class TechniciansController extends Controller
 {
@@ -181,7 +178,7 @@ class TechniciansController extends Controller
         $request->validate([
             'asset_no' => 'required',
             'next_due_date' => 'required',
-            'type' => 'required|in:lv,lt',
+            'type' => 'required|in:lv,lt,tk,fm,pm',
             'department' => 'nullable|string',
             'description' => 'nullable|string',
         ]);
@@ -230,7 +227,7 @@ class TechniciansController extends Controller
         $request->validate([
             'asset_no' => 'required',
             'next_due_date' => 'required',
-            'type' => 'required|in:lv,lt',
+            'type' => 'required|in:lv,lt,tk,fm,pm',
         ]);
 
         $type = $request->type;
@@ -338,6 +335,8 @@ class TechniciansController extends Controller
             'lv' => LightVehicleSchedule::class,
             'lt' => LightingTowerSchedule::class,
             'tk' => TruckSchedule::class,
+            'fm' => ForkliftManitouSchedule::class,
+            'pm' => PumpSchedule::class,
         };
     }
 }

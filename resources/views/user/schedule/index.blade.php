@@ -37,7 +37,7 @@
                         <h5 class="card-title mb-0">Schedule List</h5>
                     </div>
 
-                    <div class="flex-shrink-0 d-flex gap-2">
+                    <div class="flex-shrink-0 d-flex align-items-center gap-2">
                         <div>
                             <select name="department" id="department" class="form-control select2">
                                 <option value="">Select Department</option>
@@ -58,18 +58,18 @@
                             <input type="text" name="date-range" class="form-control" id="date-range">
                         </div>
                         <div>
-                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
                                 data-bs-target="#sendEmailBtn">
                                 <i class="ri-mail-send-line"></i> Send Email
                             </button>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-danger" id="exportPdf">
+                            <button type="button" class="btn btn-sm btn-danger" id="exportPdf">
                                 <i class="ri-file-pdf-2-line"></i> PDF
                             </button>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-success" id="exportExcel">
+                            <button type="button" class="btn btn-sm btn-success" id="exportExcel">
                                 <i class="ri-file-excel-2-line"></i> Excel
                             </button>
                         </div>
@@ -134,7 +134,6 @@
 @endsection
 @section('vendor-style')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/cdn/datatables/dataTables.bootstrap5.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/libs/select2/select2.min.css') }}">
     <style>
         .select2-selection__rendered {
