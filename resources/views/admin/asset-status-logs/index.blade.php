@@ -177,6 +177,20 @@
 
             window.open(url, '_blank');
         });
+
+        $('#exportExcel').on('click', function() {
+            let status = $('#new-status').val();
+            let asset_no = $('#asset_no').val();
+            let time_frame = $('#date-range').val();
+
+            let url = "{{ route('status-logs.export.excel') }}" +
+                "?type=" + encodeURIComponent(type) +
+                "&status=" + encodeURIComponent(status) +
+                "&asset_no=" + encodeURIComponent(asset_no) +
+                "&time_frame=" + encodeURIComponent(time_frame);
+
+            window.open(url, '_blank');
+        });
     </script>
 @endsection
 @section('page-style')

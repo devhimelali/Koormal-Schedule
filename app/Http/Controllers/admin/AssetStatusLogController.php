@@ -8,8 +8,10 @@ use Illuminate\Http\Request;
 use App\Models\TruckSchedule;
 use App\Models\AssetStatusLog;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\StatusLogExport;
 use App\Http\Controllers\Controller;
 use App\Models\LightVehicleSchedule;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\LightingTowerSchedule;
 use App\Models\ForkliftManitouSchedule;
 use Yajra\DataTables\Facades\DataTables;
@@ -51,6 +53,13 @@ class AssetStatusLogController extends Controller
             ]);
 
         return $pdf->stream('asset-status-logs' . time() . '.pdf');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $data = $this->applyFilters(AssetStatusLog::query()->where('asset_type', $request->type), $request)->get();
+
+        return Excel::download(new StatusLogExport($data, 'Status Logs'), 'asset-status-logs' . time() . '.xlsx');
     }
 
     /**
