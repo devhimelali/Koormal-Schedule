@@ -175,8 +175,8 @@ class TechniciansController extends Controller
 
         foreach ($request->emails as $email) {
             $body = '<div style="margin-top: 20px;">';
-            $body .= '<span style="background-color: ' . $statusData['background'] . ' ; padding: 4px 8px; border-radius: 2px;border: 1px solid #000; color: ' . $statusData['color'] . '">' . $statusData['message'] . '</span>';
-            $body .= $request->message;
+            $body .= '<div style="margin-bottom: 20px;">' . $request->message . '</div>';
+            $body .= '<span style="background-color: ' . $statusData['background'] . ' ; padding: 4px 8px; margin-bottom: 10px; border-radius: 2px;border: 1px solid #000; color: ' . $statusData['color'] . '">' . $statusData['message'] . '</span>';
             $body .= '</div>';
             try {
                 Mail::to($email)->send(new WorkStatusNotifyMail($request->subject, $body));

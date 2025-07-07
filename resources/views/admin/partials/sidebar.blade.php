@@ -144,6 +144,14 @@
                         <span data-key="t-status-logs">Status Logs</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)"
+                        class="nav-link emailLogsMenuBtn menu-link @if (Route::current()->getName() == 'email-logs.index') active @endif"
+                        aria-expanded="false">
+                        <i class="ph ph-envelope-open"></i>
+                        <span data-key="t-email-logs">Email Logs</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

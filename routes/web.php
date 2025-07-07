@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\AssetStatusLogController;
+use App\Http\Controllers\admin\EmailLogController;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -50,4 +51,7 @@ Route::middleware(['auth', 'role:admin', 'verified'])->group(function () {
     Route::resource('status-logs', AssetStatusLogController::class);
     Route::get('status-logs/export/pdf', [AssetStatusLogController::class, 'exportPdf'])->name('status-logs.export.pdf');
     Route::get('status-logs/export/excel', [AssetStatusLogController::class, 'exportExcel'])->name('status-logs.export.excel');
+    Route::resource('email-logs', EmailLogController::class);
+    Route::get('email-logs/export/pdf', [EmailLogController::class, 'exportPdf'])->name('email-logs.export.pdf');
+    Route::get('email-logs/export/excel', [EmailLogController::class, 'exportExcel'])->name('email-logs.export.excel');
 });
