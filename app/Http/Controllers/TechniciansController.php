@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\EmailLog;
 use App\Models\PumpSchedule;
 use Illuminate\Http\Request;
 use App\Models\TruckSchedule;
-use App\Mail\WorkStatusNotifyMail;
 use App\Models\AssetStatusLog;
+use App\Mail\WorkStatusNotifyMail;
 use App\Models\LightVehicleSchedule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -53,7 +54,7 @@ class TechniciansController extends Controller
                     $btn .= '<a href="javascript:void(0)" class="changeStatus btn btn-primary btn-sm" data-id="' . $row->id . '" data-status="' . $row->status . '">
                     <i class="ri-pencil-ruler-line"></i>
                     Change Status</a>
-                    <a href="javascript:void(0)" class="btn btn-secondary btn-sm sendEmail" data-asset_emails="' . $assetEmails . '" data-asset_no="' . $row->asset_no . '" data-status="' . $row->status . '" data-next_due_date="' . $row->next_due_date . '" data-description="' . $row->description . '">
+                    <a href="javascript:void(0)" class="btn btn-secondary btn-sm sendEmail" data-asset_emails="' . $assetEmails . '" data-asset_no="' . $row->asset_no . '" data-status="' . $row->status . '" data-next_due_date="' . $row->next_due_date . '" data-description="' . $row->description . '" data-department="' . $row->department . '">
                     <i class="ri-mail-send-line"></i>
                     Send Email</a>';
 
@@ -177,7 +178,39 @@ class TechniciansController extends Controller
             $body .= '<span style="background-color: ' . $statusData['background'] . ' ; padding: 4px 8px; border-radius: 2px;border: 1px solid #000; color: ' . $statusData['color'] . '">' . $statusData['message'] . '</span>';
             $body .= $request->message;
             $body .= '</div>';
-            Mail::to($email)->send(new WorkStatusNotifyMail($request->subject, $body));
+            try {
+                Mail::to($email)->send(new WorkStatusNotifyMail($request->subject, $body));
+
+                // Log successful email
+                EmailLog::create([
+                    'asset_no' => $request->asset_no,
+                    'department' => $request->department,
+                    'description' => $request->description,
+                    'next_due_date' => $request->next_due_date ?? null,
+                    'sent_date' => Carbon::now()->timezone(config('app.timezone'))->format('d-m-Y'),
+                    'sent_time' => Carbon::now()->timezone(config('app.timezone'))->format('H:i:s'),
+                    'email_body' => $body,
+                    'is_sent' => true,
+                    'recipient_email' => $email,
+                    'email_subject' => $request->subject,
+                    'asset_type' => $request->type
+                ]);
+            } catch (\Exception $e) {
+                // Log successful email
+                EmailLog::create([
+                    'asset_no' => $request->asset_no,
+                    'department' => $request->department,
+                    'description' => $request->description,
+                    'next_due_date' => $request->next_due_date,
+                    'sent_date' => Carbon::now()->timezone(config('app.timezone'))->format('d-m-Y'),
+                    'sent_time' => Carbon::now()->timezone(config('app.timezone'))->format('H:i:s'),
+                    'email_body' => $body,
+                    'is_sent' => false,
+                    'recipient_email' => $email,
+                    'email_subject' => $request->subject,
+                    'asset_type' => $request->type
+                ]);
+            }
         }
 
         return response()->json([

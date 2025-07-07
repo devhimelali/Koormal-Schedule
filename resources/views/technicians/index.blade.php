@@ -168,6 +168,10 @@
                     @csrf
                     <input type="hidden" name="status" id="status">
                     <input type="hidden" name="asset_no" id="asset_no">
+                    <input type="hidden" name="department" id="department">
+                    <input type="hidden" name="description" id="description">
+                    <input type="hidden" name="next_due_date" id="email_next_due_date">
+                    <input type="hidden" name="type" id="type">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="emails" class="form-label">Email Address</label>
@@ -506,6 +510,8 @@
                 let status = $(this).data('status');
                 let next_due_date = $(this).data('next_due_date');
                 let description = $(this).data('description');
+                let department = $(this).data('department');
+
                 let subject =
                     `${next_due_date} ${asset_no} ${description}`;
                 const statusDetails = {
@@ -580,6 +586,10 @@
                 });
                 $('#emails').trigger('change');
                 $('#asset_no').val(asset_no);
+                $('#department').val(department);
+                $('#description').val(description);
+                $('#email_next_due_date').val(next_due_date);
+                $('#type').val(type);
                 $('#status').val(status);
                 $('#subject').val(subject);
                 $('#message').html(message);
