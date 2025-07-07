@@ -188,6 +188,46 @@
             });
         });
 
+        $('body').on('click', '.statusLogsMenuBtn', function() {
+            Swal.fire({
+                title: 'Select Schedule Type',
+                icon: 'question',
+                html: `
+                 <p>Nothing you choose here will affect the status logs.</p>
+                <button class="swal2-confirm btn-option btn btn-sm btn-primary" data-value="light_vehicle">Light Vehicles</button>
+                <button class="swal2-confirm btn-option btn btn-sm btn-secondary" data-value="lighting_tower">Lighting Towers</button>
+                <button class="swal2-confirm btn-option btn btn-sm btn-success" data-value="truck">Truck</button>
+                <button class="swal2-confirm btn-option btn btn-sm btn-info" data-value="forklift">Forklift / Manitou</button>
+                <button class="swal2-confirm btn-option btn btn-sm btn-warning" data-value="pumps">Pumps</button>
+              `,
+                showConfirmButton: false,
+                didOpen: () => {
+                    document.querySelectorAll('.btn-option').forEach(button => {
+                        button.addEventListener('click', () => {
+                            const selected = button.getAttribute('data-value');
+                            Swal.close();
+                            if (selected === 'light_vehicle') {
+                                window.location.href =
+                                    "{{ route('status-logs.index', ['type' => 'lv']) }}";
+                            } else if (selected === 'lighting_tower') {
+                                window.location.href =
+                                    "{{ route('status-logs.index', ['type' => 'lt']) }}";
+                            } else if (selected === 'truck') {
+                                window.location.href =
+                                    "{{ route('status-logs.index', ['type' => 'tk']) }}";
+                            } else if (selected === 'forklift') {
+                                window.location.href =
+                                    "{{ route('status-logs.index', ['type' => 'fm']) }}";
+                            } else if (selected === 'pumps') {
+                                window.location.href =
+                                    "{{ route('status-logs.index', ['type' => 'pm']) }}";
+                            }
+                        });
+                    });
+                }
+            });
+        });
+
         $('body').on('click', '.technicianMenuBtn', function() {
             Swal.fire({
                 title: 'Select Asset Type',

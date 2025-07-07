@@ -7,6 +7,7 @@ use App\Models\PumpSchedule;
 use Illuminate\Http\Request;
 use App\Models\TruckSchedule;
 use App\Mail\WorkStatusNotifyMail;
+use App\Models\AssetStatusLog;
 use App\Models\LightVehicleSchedule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -78,8 +79,20 @@ class TechniciansController extends Controller
         $type = $request->type;
         $model = $this->getScheduleModel($type);
         $schedule = $model::find($request->id);
+        $oldStatus = $schedule->status;
         $schedule->status = $request->status;
         $schedule->save();
+
+        AssetStatusLog::create([
+            'asset_no' => $schedule->asset_no,
+            'description' => $schedule->description,
+            'next_due_date' => $schedule->next_due_date,
+            'old_status' => $oldStatus,
+            'new_status' => $request->status,
+            'change_time' => Carbon::now()->timezone(config('app.timezone'))->format('H:i:s'),
+            'change_date' => Carbon::now()->timezone(config('app.timezone'))->format('d-m-Y'),
+            'asset_type' => $type
+        ]);
 
         return response()->json([
             'status' => 'success',

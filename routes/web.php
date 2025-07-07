@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\AssetStatusLogController;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -11,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\TechniciansController;
 use App\Http\Controllers\User\ScheduleController;
+use App\Models\AssetStatusLog;
 
 Route::get('/', [RedirectController::class, 'redirect'])->name('redirect')->middleware('auth');
 Route::get('{role}/profile', [ProfileController::class, 'show'])->name('profile.show');
@@ -42,3 +44,10 @@ Route::get('run-job', function () {
 
 // Route::get('/run-db-cron-job', [CronJobController::class, 'runDbCronJob'])->middleware('secure.cron');
 Route::get('/run-db-cron-job', [CronJobController::class, 'runDbCronJob']);
+
+
+Route::middleware(['auth', 'role:admin', 'verified'])->group(function () {
+    Route::resource('status-logs', AssetStatusLogController::class);
+    Route::get('status-logs/export/pdf', [AssetStatusLogController::class, 'exportPdf'])->name('status-logs.export.pdf');
+    Route::get('status-logs/export/excel', [AssetStatusLogController::class, 'exportExcel'])->name('status-logs.export.excel');
+});
