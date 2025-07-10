@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Models\LightingTowerSchedule;
 use App\Models\ForkliftManitouSchedule;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class TechniciansController extends Controller
 {
@@ -94,6 +96,22 @@ class TechniciansController extends Controller
             'change_date' => Carbon::now()->timezone(config('app.timezone'))->format('d-m-Y'),
             'asset_type' => $type
         ]);
+
+        if ($request->status == 'work completed, ready for pickup') {
+            $response = Http::withHeaders([
+                'Accept' => 'application/json',
+                'X-API-KEY' => env('API_KEY'),
+            ])
+                ->get(
+                    env('API_ENDPOINT') . '/mark-job-completed',
+                    [
+                        'asset_no' => $schedule->asset_no,
+                        'next_due_date' => $schedule->next_due_date
+                    ]
+                );
+
+            Log::info($response->body());
+        }
 
         return response()->json([
             'status' => 'success',

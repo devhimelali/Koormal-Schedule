@@ -214,7 +214,7 @@
                 <form action="{{ route('technician.add.asset') }}" method="post" id="addAssetForm">
                     @csrf
                     <input type="hidden" name="_method" value="POST" id="method">
-                    <input type="hidden" name="type" id="type">
+                    <input type="hidden" name="type" id="addType">
                     <div class="modal-body">
                         <div class="mb-2">
                             <label for="asset_no" class="form-label">Asset Number <span
@@ -229,8 +229,8 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="mb-2">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea name="description" id="description" class="form-control" rows="5"></textarea>
+                            <label for="addDescription" class="form-label">Description</label>
+                            <textarea name="description" id="addDescription" class="form-control" rows="5"></textarea>
                         </div>
                         <div class="mb-3 email_wrapper d-none">
                             <label for="assetEmails" class="form-label">Email Addresses</label>
@@ -653,7 +653,7 @@
             });
 
             $('#addAsset').on('click', function() {
-                $('#type').val(type);
+                $('#addType').val(type);
                 $('#addAssetModal').modal('show');
             });
 
@@ -787,9 +787,9 @@
 
                         // Populate fields
                         $('#addAssetModal #asset_no').val(response.data.asset_no);
-                        $('#description').val(response.data.description);
+                        $('#addDescription').val(response.data.description);
                         $('#next_due_date').val(response.data.next_due_date);
-                        $('#type').val(type);
+                        $('#addType').val(type);
                         $('#next_due_date').flatpickr({
                             enableTime: false,
                             dateFormat: "d-m-Y",
