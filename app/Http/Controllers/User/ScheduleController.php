@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Exports\ScheduleExport;
-use App\Models\LightingTowerSchedule;
-use App\Models\LightVehicleSchedule;
-use App\Models\TruckSchedule;
+use App\Mail\AssetDueEmail;
+use App\Models\PumpSchedule;
 use Illuminate\Http\Request;
+use App\Models\TruckSchedule;
+use App\Exports\ScheduleExport;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\DataTables;
 use App\Jobs\SendScheduleEmailJob;
 use App\Http\Controllers\Controller;
+use App\Models\LightVehicleSchedule;
+use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Models\LightingTowerSchedule;
 use App\Models\ForkliftManitouSchedule;
-use App\Models\PumpSchedule;
 use Illuminate\Support\Facades\Validator;
 
 class ScheduleController extends Controller
@@ -50,6 +52,23 @@ class ScheduleController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $emails = '';
+
+                    if ($row->asset && $row->asset->assetEmails) {
+                        foreach ($row->asset->assetEmails as $email) {
+                            if ($email->email) {
+                                $emails .= $email->email->email . ', ';
+                            }
+                        }
+                        $emails = rtrim($emails, ', ');
+                    }
+                    return '<button data-id="' . $row->id . '" data-asset-no="' . $row->asset_no . '" data-emails="' . e($emails) . '" data-next-due-date="' . $row->next_due_date . '" class="btn btn-sm btn-secondary send-email">
+                    <i class="bi bi-envelope me-1"></i>
+                    Send Email
+                    </button>';
+                })
+                ->rawColumns(['action'])
                 ->make(true);
         }
 
@@ -105,6 +124,33 @@ class ScheduleController extends Controller
             ]);
 
         return $pdf->stream('schedules-' . time() . '.pdf');
+    }
+
+    public function sendScheduleEmail(Request $request)
+    {
+        $request->validate([
+            'subject' => 'required',
+            'emails' => 'required',
+            'message' => 'required',
+            'next_due_date' => 'required'
+        ]);
+
+        $emails = $request->emails;
+        $emailArray = preg_split('/\s*,\s*/', $emails, -1, PREG_SPLIT_NO_EMPTY);
+
+        foreach ($emailArray as $email) {
+            Mail::to($email)->send(new AssetDueEmail(
+                $request->subject,
+                $request->asset_no,
+                $request->message,
+                $request->next_due_date
+            ));
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Email sent successfully.'
+        ]);
     }
 
     public function sendEmail(Request $request)
@@ -188,6 +234,31 @@ class ScheduleController extends Controller
         $schedules = $schedules->get();
 
         return Excel::download(new ScheduleExport($schedules, $sheetName), 'schedules-' . time() . '.xlsx');
+    }
+
+    public function ckeditorUpload(Request $request)
+    {
+        $request->validate([
+            'upload' => 'required|image|mimes:jpeg,png,jpg,gif,svg'
+        ]);
+
+        if ($request->hasFile('upload')) {
+            $originName = $request->file('upload')->getClientOriginalName();
+            $fileName = pathinfo($originName, PATHINFO_FILENAME);
+            $extension = $request->file('upload')->getClientOriginalExtension();
+            $fileName = $fileName . '_' . time() . '.' . $extension;
+
+            $request->file('upload')->move(public_path('uploads/emails'), $fileName);
+            $url = asset('uploads/emails/' . $fileName);
+
+            return response()->json([
+                'fileName' => $fileName,
+                'uploaded' => 1,
+                'url' => $url
+            ]);
+        }
+
+        return response()->json(['uploaded' => 0, 'error' => ['message' => 'No file uploaded.']], 400);
     }
 
     protected function getScheduleModel($type): string

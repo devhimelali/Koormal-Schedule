@@ -33,6 +33,7 @@ Route::middleware(['auth', 'verified', 'role:admin|user|technician'])->group(fun
     Route::get('koormal-contact', function () {
         return view('koormal_contact');
     })->name('koormal.contact');
+    Route::post('schedule-send-email', [ScheduleController::class, 'sendScheduleEmail'])->name('schedule.send.email');
 });
 
 Route::post('technicians/change-status', [TechniciansController::class, 'changeStatus'])->name('technicians.change.status')->middleware(['auth', 'role:admin|technician', 'verified']);
@@ -55,3 +56,5 @@ Route::middleware(['auth', 'role:admin', 'verified'])->group(function () {
     Route::get('email-logs/export/pdf', [EmailLogController::class, 'exportPdf'])->name('email-logs.export.pdf');
     Route::get('email-logs/export/excel', [EmailLogController::class, 'exportExcel'])->name('email-logs.export.excel');
 });
+
+Route::post('ckeditor.upload', [ScheduleController::class, 'ckeditorUpload'])->name('ckeditor.upload')->middleware('auth:sanctum');
