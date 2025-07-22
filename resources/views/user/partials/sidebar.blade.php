@@ -113,6 +113,14 @@
                     </div>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('equipment-long-term-down-time.index') }}"
+                        class="nav-link menu-link @if (Route::current()->getName() == 'equipment-long-term-down-time.index') active @endif"
+                        aria-expanded="false">
+                        <i class="ph ph-file-pdf"></i>
+                        <span data-key="t-long-term-down-time">Long Term Downtime</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('koormal.contact') }}"
                         class="nav-link menu-link @if (Route::current()->getName() == 'koormal.contact') active @endif"
                         aria-expanded="false">

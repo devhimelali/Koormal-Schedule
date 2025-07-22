@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\CronJobController;
+use App\Http\Controllers\EquipmentLongTermDowntimeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\TechniciansController;
@@ -34,6 +35,19 @@ Route::middleware(['auth', 'verified', 'role:admin|user|technician'])->group(fun
         return view('koormal_contact');
     })->name('koormal.contact');
     Route::post('schedule-send-email', [ScheduleController::class, 'sendScheduleEmail'])->name('schedule.send.email');
+    Route::get('equipment-long-term-down-time', [EquipmentLongTermDowntimeController::class, 'index'])->name('equipment-long-term-down-time.index');
+    Route::get('/equipment-pdf/{filename}', function ($filename) {
+        $path = 'https://www.koormal-extra.4emus.com/pdf/equipment-long-term-downtime/' . $filename;
+
+        if (!file_exists($path)) {
+            abort(404);
+        }
+
+        return response()->file($path, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+        ]);
+    })->name('equipment.pdf.preview');
 });
 
 Route::post('technicians/change-status', [TechniciansController::class, 'changeStatus'])->name('technicians.change.status')->middleware(['auth', 'role:admin|technician', 'verified']);
