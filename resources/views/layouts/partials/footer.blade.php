@@ -9,7 +9,7 @@
             </div>
             <div class="col-sm-6">
                 <div class="text-sm-end d-none d-sm-block">
-                    Design & Develop by Md. Himel Ali
+                    Design & Develop by <a href="https://www.4emus.com" target="_blank" class="text-reset">4emus</a>
                 </div>
             </div>
         </div>
