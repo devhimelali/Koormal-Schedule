@@ -82,6 +82,13 @@
                             </ul>
                         </div>
                     </div>
+                    <div class="row justify-content-center mt-1">
+                        <div class="col-5 text-center p-1 rounded text-white"
+                            style="background: #ef4444; line-height: 1.1;">
+                            Scheduled Work For Today<br>
+                            does not include breakdowns or callouts
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Optional CSS for cleaner styling -->
