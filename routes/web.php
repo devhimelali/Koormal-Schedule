@@ -48,6 +48,12 @@ Route::middleware(['auth', 'verified', 'role:admin|user|technician'])->group(fun
             'Content-Disposition' => 'inline; filename="' . $filename . '"',
         ]);
     })->name('equipment.pdf.preview');
+
+    Route::get('schedule-list', [TechniciansController::class, 'scheduleList'])->name('technician.schedule.list');
+    Route::post('add-asset', [TechniciansController::class, 'addAsset'])->name('technician.add.asset');
+    Route::get('edit-asset/{id}', [TechniciansController::class, 'editAsset'])->name('technician.edit.asset');
+    Route::put('update-asset/{id}', [TechniciansController::class, 'updateAsset'])->name('technician.update.asset');
+    Route::delete('delete-asset/{id}', [TechniciansController::class, 'deleteAsset'])->name('technician.delete.asset');
 });
 
 Route::post('technicians/change-status', [TechniciansController::class, 'changeStatus'])->name('technicians.change.status')->middleware(['auth', 'role:admin|technician', 'verified']);

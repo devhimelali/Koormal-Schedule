@@ -27,7 +27,7 @@ class TechniciansController extends Controller
             $data = $model::with('asset.assetEmails.email')->where('is_today_works', 1);
 
             if ($request->shift) {
-                $data = $data->where('description', 'like', '%' . $request->shift . '%');
+                $data = $data->where('description', 'like', '%'.$request->shift.'%');
             }
 
             return datatables()->of($data)
@@ -53,18 +53,18 @@ class TechniciansController extends Controller
                     }
                     $assetEmails = implode(', ', $emailList);
                     $btn = '<div class="btn-group" role="group">';
-                    $btn .= '<a href="javascript:void(0)" class="changeStatus btn btn-primary btn-sm" data-id="' . $row->id . '" data-status="' . $row->status . '">
+                    $btn .= '<a href="javascript:void(0)" class="changeStatus btn btn-primary btn-sm" data-id="'.$row->id.'" data-status="'.$row->status.'">
                     <i class="ri-pencil-ruler-line"></i>
                     Change Status</a>
-                    <a href="javascript:void(0)" class="btn btn-secondary btn-sm sendEmail" data-asset_emails="' . $assetEmails . '" data-asset_no="' . $row->asset_no . '" data-status="' . $row->status . '" data-next_due_date="' . $row->next_due_date . '" data-description="' . $row->description . '" data-department="' . $row->department . '">
+                    <a href="javascript:void(0)" class="btn btn-secondary btn-sm sendEmail" data-asset_emails="'.$assetEmails.'" data-asset_no="'.$row->asset_no.'" data-status="'.$row->status.'" data-next_due_date="'.$row->next_due_date.'" data-description="'.$row->description.'" data-department="'.$row->department.'">
                     <i class="ri-mail-send-line"></i>
                     Send Email</a>';
 
-                    if ($row->is_technician_entry && Auth::user()->roles->first()->name == 'technician') {
-                        $btn .= '<a href="javascript:void(0)" class="editAsset btn btn-warning btn-sm" data-id="' . $row->id . '">
+                    if ($row->is_technician_entry && (Auth::user()->roles->first()->name == 'technician' || Auth::user()->roles->first()->name == 'admin')) {
+                        $btn .= '<a href="javascript:void(0)" class="editAsset btn btn-warning btn-sm" data-id="'.$row->id.'">
                         <i class="ri-edit-line"></i>
                         Edit</a>';
-                        $btn .= '<a href="javascript:void(0)" class="deleteAsset btn btn-danger btn-sm" data-id="' . $row->id . '">
+                        $btn .= '<a href="javascript:void(0)" class="deleteAsset btn btn-danger btn-sm" data-id="'.$row->id.'">
                         <i class="ri-delete-bin-line"></i>
                         Delete</a>';
                     }
@@ -103,7 +103,7 @@ class TechniciansController extends Controller
                 'X-API-KEY' => env('API_KEY'),
             ])
                 ->get(
-                    env('API_ENDPOINT') . '/mark-job-completed',
+                    env('API_ENDPOINT').'/mark-job-completed',
                     [
                         'asset_no' => $schedule->asset_no,
                         'next_due_date' => $schedule->next_due_date
@@ -193,8 +193,8 @@ class TechniciansController extends Controller
 
         foreach ($request->emails as $email) {
             $body = '<div style="margin-top: 20px;">';
-            $body .= '<div style="margin-bottom: 20px;">' . $request->message . '</div>';
-            $body .= '<span style="background-color: ' . $statusData['background'] . ' ; padding: 4px 8px; margin-bottom: 10px; border-radius: 2px;border: 1px solid #000; color: ' . $statusData['color'] . '">' . $statusData['message'] . '</span>';
+            $body .= '<div style="margin-bottom: 20px;">'.$request->message.'</div>';
+            $body .= '<span style="background-color: '.$statusData['background'].' ; padding: 4px 8px; margin-bottom: 10px; border-radius: 2px;border: 1px solid #000; color: '.$statusData['color'].'">'.$statusData['message'].'</span>';
             $body .= '</div>';
             try {
                 Mail::to($email)->send(new WorkStatusNotifyMail($request->subject, $body));
@@ -351,10 +351,10 @@ class TechniciansController extends Controller
             $originName = $request->file('upload')->getClientOriginalName();
             $fileName = pathinfo($originName, PATHINFO_FILENAME);
             $extension = $request->file('upload')->getClientOriginalExtension();
-            $fileName = $fileName . '_' . time() . '.' . $extension;
+            $fileName = $fileName.'_'.time().'.'.$extension;
 
             $request->file('upload')->move(public_path('uploads/emails'), $fileName);
-            $url = asset('uploads/emails/' . $fileName);
+            $url = asset('uploads/emails/'.$fileName);
 
             return response()->json([
                 'fileName' => $fileName,

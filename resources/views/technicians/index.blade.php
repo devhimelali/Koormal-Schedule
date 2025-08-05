@@ -27,13 +27,15 @@
                                         <i class="ri-refresh-line align-bottom"></i>
                                         Today's Work
                                     </button>
+                                @endif
+                                @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('technician'))
                                     <button class="btn btn-sm btn-secondary" id="addAsset">
                                         <i class="ri-add-line align-bottom"></i>
                                         Add Asset
                                     </button>
                                 @endif
                                 <div>
-                                    <select name="shift" class="form-select" id="shift">
+                                    <select name="shift" class="form-select form-select-sm" id="shift">
                                         <option value="">Both Shift</option>
                                         <option value="Dayshift">Day Shift</option>
                                         <option value="Nightshift">Night Shift</option>
@@ -46,45 +48,47 @@
                         <div class="col-12 col-md-9">
                             <ul class="list-inline mb-0 d-flex flex-wrap gap-2 justify-content-md-end">
                                 <li>
-                                    <span class="badge-status" style="background-color: #ffffff; border: 1px solid #000;">No
+                                    <span class="badge-status"
+                                          style="background-color: #ffffff; border: 1px solid #000;">No
                                         Status Yet</span>
                                 </li>
                                 <li>
                                     <span class="badge-status"
-                                        style="background-color: #00ff00; border: 1px solid #000;">Delivered</span>
+                                          style="background-color: #00ff00; border: 1px solid #000;">Delivered</span>
                                 </li>
                                 <li>
-                                    <span class="badge-status" style="background-color: #ff00ff; border: 1px solid #000;">No
+                                    <span class="badge-status"
+                                          style="background-color: #ff00ff; border: 1px solid #000;">No
                                         show</span>
                                 </li>
                                 <li>
                                     <span class="badge-status"
-                                        style="background-color: #ffff00; border: 1px solid #000;">Work underway</span>
+                                          style="background-color: #ffff00; border: 1px solid #000;">Work underway</span>
                                 </li>
                                 <li>
                                     <span class="badge-status"
-                                        style="background-color: #ff0000; border: 1px solid #000;">Tagged out – further work
+                                          style="background-color: #ff0000; border: 1px solid #000;">Tagged out – further work
                                         found</span>
                                 </li>
                                 <li>
                                     <span class="badge-status"
-                                        style="background-color: #00ffff; border: 1px solid #000;">Work completed, ready for
+                                          style="background-color: #00ffff; border: 1px solid #000;">Work completed, ready for
                                         pickup</span>
                                 </li>
                                 <li>
                                     <span class="badge-status"
-                                        style="background-color: #C4A484; border: 1px solid #000;">Mud buildup Unsafe</span>
+                                          style="background-color: #C4A484; border: 1px solid #000;">Mud buildup Unsafe</span>
                                 </li>
                                 <li>
                                     <span class="badge-status"
-                                        style="background-color: #FFD580; border: 1px solid #000;">Late Delivery</span>
+                                          style="background-color: #FFD580; border: 1px solid #000;">Late Delivery</span>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div class="row justify-content-center mt-1">
                         <div class="col-5 text-center p-1 rounded text-white"
-                            style="background: #ef4444; line-height: 1.1;">
+                             style="background: #ef4444; line-height: 1.1;">
                             Scheduled Work For Today<br>
                             does not include breakdowns or callouts
                         </div>
@@ -106,16 +110,16 @@
                     <div class="table-responsive">
                         <table class="table table-centered align-middle mb-0" id="dataTable">
                             <thead class="table-active">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Asset Number</th>
-                                    <th>Description</th>
-                                    <th>Department</th>
-                                    <th>Next Due Date</th>
-                                    @role('admin|technician')
-                                        <th style="max-width: 355px; width: 355px;">Action</th>
-                                    @endrole
-                                </tr>
+                            <tr>
+                                <th>#</th>
+                                <th>Asset Number</th>
+                                <th>Description</th>
+                                <th>Department</th>
+                                <th>Next Due Date</th>
+                                @role('admin|technician')
+                                <th style="max-width: 355px; width: 355px;">Action</th>
+                                @endrole
+                            </tr>
                             </thead>
                             <tbody>
                             </tbody>
@@ -128,12 +132,12 @@
     </div>
 
     <div id="statusModal" class="modal fade" data-bs-backdrop="static" tabindex="-1" aria-labelledby="myModalLabel"
-        aria-hidden="true" style="display: none;">
+         aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="myModalLabel">Change Status</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{{ route('technicians.change.status') }}" method="post" id="statusForm">
                     @csrf
@@ -147,7 +151,8 @@
                                 <option value="no show">No show</option>
                                 <option value="work underway">Work underway</option>
                                 <option value="tagged out – further work found">Tagged out – further work found</option>
-                                <option value="work completed, ready for pickup">Work completed, ready for pickup</option>
+                                <option value="work completed, ready for pickup">Work completed, ready for pickup
+                                </option>
                                 <option value="delivered">Delivered</option>
                                 <option value="mud buildup unsafe">Mud buildup Unsafe</option>
                                 <option value="late delivery">Late Delivery</option>
@@ -164,12 +169,12 @@
     </div><!-- /.modal -->
     <!-- Email Modal Start -->
     <div id="sendEmailModal" class="modal fade" data-bs-backdrop="static" tabindex="-1" aria-labelledby="myModalLabel"
-        aria-hidden="true" style="display: none;">
+         aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="myModalLabel">Send Email</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{{ route('technician.send.email') }}" method="post" id="sendEmailForm">
                     @csrf
@@ -187,7 +192,7 @@
                         <div class="mb-3">
                             <label for="subject" class="form-label">Subject</label>
                             <input type="text" class="form-control" id="subject" name="subject"
-                                placeholder="Enter email subject">
+                                   placeholder="Enter email subject">
                         </div>
                         <div class="mb-3">
                             <label for="message" class="form-label">Message</label>
@@ -206,7 +211,7 @@
     <!-- Email Modal End -->
     <!-- Asset Modal Start -->
     <div id="addAssetModal" class="modal fade" data-bs-backdrop="static" tabindex="-1" aria-labelledby="myModalLabel"
-        aria-hidden="true" style="display: none;">
+         aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header d-flex justify-content-between">
@@ -216,7 +221,7 @@
                             <option value="">Select Schedule</option>
                         </select>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{{ route('technician.add.asset') }}" method="post" id="addAssetForm">
                     @csrf
@@ -227,7 +232,7 @@
                             <label for="asset_no" class="form-label">Asset Number <span
                                     class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="asset_no" name="asset_no"
-                                placeholder="Enter asset number">
+                                   placeholder="Enter asset number">
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="mb-2">
@@ -255,13 +260,13 @@
     <!-- Asset Modal End -->
     <!-- Asset Delete Modal Start -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" style="display: none;"
-        aria-modal="true" role="dialog">
+         aria-modal="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteModalLabel">Delete Asset</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                        id="close-modal"></button>
+                            id="close-modal"></button>
                 </div>
 
                 <form class="tablelist-form" action="" method="POST" id="deleteForm">
@@ -313,21 +318,21 @@
 @endsection
 @section('page-script')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             let emailEditor;
 
-            $('#sendEmailModal').on('shown.bs.modal', function() {
+            $('#sendEmailModal').on('shown.bs.modal', function () {
                 if (!emailEditor) {
                     ClassicEditor.create(document.querySelector('.ckeditor-classic'), {
-                            ckfinder: {
-                                uploadUrl: "{{ route('technician.ckeditor.upload') }}?_token={{ csrf_token() }}"
-                            }
-                        })
-                        .then(function(editor) {
+                        ckfinder: {
+                            uploadUrl: "{{ route('technician.ckeditor.upload') }}?_token={{ csrf_token() }}"
+                        }
+                    })
+                        .then(function (editor) {
                             emailEditor = editor;
                             editor.ui.view.editable.element.style.height = "170px";
                         })
-                        .catch(function(error) {
+                        .catch(function (error) {
                             console.error(error);
                         });
                 }
@@ -355,11 +360,11 @@
             let url = "{{ route('technicians.index') }}" + "?type=" + type;
 
             let columns = [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
-                },
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex',
+                orderable: false,
+                searchable: false
+            },
                 {
                     data: 'asset_no',
                     name: 'asset_no'
@@ -394,7 +399,7 @@
                     url: url,
                 },
                 columns: columns,
-                createdRow: function(row, data, dataIndex) {
+                createdRow: function (row, data, dataIndex) {
                     let status = data.status?.toLowerCase();
                     switch (status) {
                         case 'delivered':
@@ -432,7 +437,7 @@
                 }
             });
 
-            $('body').on('click', '.changeStatus', function() {
+            $('body').on('click', '.changeStatus', function () {
                 let id = $(this).data('id');
                 $('#scheduleId').val(id);
                 $('#scheduleType').val(type);
@@ -446,11 +451,11 @@
                 table.ajax.url(url).load();
             }
 
-            $('#shift').on('change', function() {
+            $('#shift').on('change', function () {
                 filterData();
             });
 
-            $('#statusForm').on('submit', function(e) {
+            $('#statusForm').on('submit', function (e) {
                 e.preventDefault();
                 let formData = new FormData(this);
                 let url = $(this).attr('action');
@@ -461,49 +466,49 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    beforeSend: function() {
+                    beforeSend: function () {
                         $('#submitBtn').attr('disabled', true);
                         $('#submitBtn').html(
                             '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...'
                         );
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status == 'success') {
                             table.ajax.reload();
                             $('#statusModal').modal('hide');
                         }
                     },
-                    error: function(response) {
+                    error: function (response) {
                         notify('error', response.responseJSON.message);
                     },
-                    complete: function() {
+                    complete: function () {
                         $('#submitBtn').attr('disabled', false);
                         $('#submitBtn').html('Update');
                     }
                 });
             });
 
-            $('#loadTodayWorks').on('click', function() {
+            $('#loadTodayWorks').on('click', function () {
                 $.ajax({
                     url: "{{ route('technician.load.today.works') }}" + "?type=" + type,
                     method: 'GET',
-                    beforeSend: function() {
+                    beforeSend: function () {
                         $('#loadTodayWorks').attr('disabled', true);
                         $('#loadTodayWorks').html(
                             '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...'
                         );
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status == 'success') {
                             notify('success', response.message);
                             table.ajax.reload();
                         }
                     },
-                    error: function(response) {
+                    error: function (response) {
                         notify('error',
                             'Something went wrong on our end. Please try again later.');
                     },
-                    complete: function() {
+                    complete: function () {
                         $('#loadTodayWorks').attr('disabled', false);
                         $('#loadTodayWorks').html(
                             '<i class="ri-refresh-line align-bottom"></i> Today\'s Work');
@@ -511,7 +516,7 @@
                 })
             });
 
-            $('body').on('click', '.sendEmail', function() {
+            $('body').on('click', '.sendEmail', function () {
                 let asset_emails = $(this).data('asset_emails');
                 let asset_no = $(this).data('asset_no');
                 let status = $(this).data('status');
@@ -603,7 +608,7 @@
                 $('#sendEmailModal').modal('show');
             })
 
-            $('#sendEmailForm').on('submit', function(e) {
+            $('#sendEmailForm').on('submit', function (e) {
                 e.preventDefault();
                 // Sync CKEditor content into the <textarea>
                 if (emailEditor) {
@@ -620,23 +625,23 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    beforeSend: function() {
+                    beforeSend: function () {
                         $('#sendEmailBtn').attr('disabled', true);
                         $('#sendEmailBtn').html(
                             '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...'
                         );
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status == 'success') {
                             notify('success', response.message);
                             $('#sendEmailModal').modal('hide');
                         }
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         // if validation fails
                         if (xhr.status == 422) {
                             let errors = xhr.responseJSON.errors;
-                            $.each(errors, function(key, value) {
+                            $.each(errors, function (key, value) {
                                 notify('error', value);
                                 let input = $('[name="' + key + '"]');
                                 input.addClass('is-invalid');
@@ -652,19 +657,19 @@
                             notify('error', error);
                         }
                     },
-                    complete: function() {
+                    complete: function () {
                         $('#sendEmailBtn').attr('disabled', false);
                         $('#sendEmailBtn').html('Send Email');
                     }
                 });
             });
 
-            $('#addAsset').on('click', function() {
+            $('#addAsset').on('click', function () {
                 $('#addType').val(type);
                 $('#addAssetModal').modal('show');
             });
 
-            $('#addAssetModal').on('hidden.bs.modal', function() {
+            $('#addAssetModal').on('hidden.bs.modal', function () {
                 $('#addAssetForm')[0].reset();
                 $('#method').val('POST');
                 $('#addAssetModal .modal-title').text('Add Asset to Todays Work List');
@@ -677,7 +682,7 @@
                 $('#addAssetForm').find('.is-invalid').removeClass('is-invalid');
             });
 
-            $('#addAssetForm').on('submit', function(e) {
+            $('#addAssetForm').on('submit', function (e) {
                 e.preventDefault();
                 let formData = new FormData(this);
                 let url = $(this).attr('action');
@@ -688,23 +693,23 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    beforeSend: function() {
+                    beforeSend: function () {
                         $('#addAssetSubmitBtn').attr('disabled', true);
                         $('#addAssetSubmitBtn').html(
                             '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...'
                         );
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status == 'success') {
                             table.ajax.reload();
                             notify('success', response.message);
                             $('#addAssetModal').modal('hide');
                         }
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         if (xhr.status == 422) {
                             let errors = xhr.responseJSON.errors;
-                            $.each(errors, function(key, value) {
+                            $.each(errors, function (key, value) {
                                 notify('error', value);
                                 let input = $('[name="' + key + '"]');
                                 input.addClass('is-invalid');
@@ -716,14 +721,14 @@
                         }
 
                     },
-                    complete: function() {
+                    complete: function () {
                         $('#addAssetSubmitBtn').attr('disabled', false);
                         $('#addAssetSubmitBtn').html('Save');
                     }
                 });
             });
 
-            $('#sendEmailModal').on('hidden.bs.modal', function() {
+            $('#sendEmailModal').on('hidden.bs.modal', function () {
                 if (emailEditor) {
                     emailEditor.setData(''); // Clear CKEditor content
                 }
@@ -731,7 +736,7 @@
                 $('#emails').val(null).trigger('change'); // If you're using Select2
             });
 
-            $('body').on('click', '.deleteAsset', function() {
+            $('body').on('click', '.deleteAsset', function () {
                 let id = $(this).data('id');
                 let url = "{{ route('technician.delete.asset', ':id') }}".replace(':id', id) +
                     "?type=" + type;
@@ -740,7 +745,7 @@
             });
 
             // Handle form submission
-            $('#deleteForm').submit(function(e) {
+            $('#deleteForm').submit(function (e) {
                 e.preventDefault();
                 var form = $(this);
                 var url = form.attr('action');
@@ -749,36 +754,36 @@
                     url: url,
                     type: 'POST',
                     data: form.serialize(),
-                    beforeSend: function() {
+                    beforeSend: function () {
                         $('#deleteBtn').prop('disabled', true);
                         $('#deleteBtn').html(
                             '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...'
                         );
                     },
-                    success: function(response) {
+                    success: function (response) {
                         $('#deleteModal').modal('hide');
                         table.ajax.reload();
                         notify('success', response.message);
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         let errors = xhr.responseJSON.errors;
-                        $.each(errors, function(key, value) {
+                        $.each(errors, function (key, value) {
                             notify('error', value);
                         });
                     },
-                    complete: function() {
+                    complete: function () {
                         $('#deleteBtn').prop('disabled', false);
                         $('#deleteBtn').html('Delete');
                     }
                 });
             });
 
-            $('body').on('click', '.editAsset', function() {
+            $('body').on('click', '.editAsset', function () {
                 let id = $(this).data('id');
                 $('#loader').show();
 
                 $.get("{{ route('technician.edit.asset', ':id') }}".replace(':id', id) + "?type=" + type,
-                    function(
+                    function (
                         response) {
                         $('#loader').hide();
                         if (response.status === 'error') {
@@ -805,20 +810,20 @@
                         });
                         $('#addAssetModal').modal('show');
                         console.log(response.data);
-                    }).fail(function() {
+                    }).fail(function () {
                     $('#loader').hide();
                     notify('error', 'Something went wrong. Please try again.');
                 });
             });
 
-            $('#addAssetModal').on('show.bs.modal', function() {
+            $('#addAssetModal').on('show.bs.modal', function () {
                 $.ajax({
                     url: "{{ route('technician.schedule.list') }}" + "?type=" + type,
                     type: 'GET',
-                    success: function(data) {
+                    success: function (data) {
                         let select = $('#schedule_id');
                         select.empty().append('<option value="">Select Schedule</option>');
-                        data.forEach(function(schedule) {
+                        data.forEach(function (schedule) {
                             select.append(
                                 `<option value="${schedule.id}">${schedule.asset_no}</option>`
                             );
@@ -830,7 +835,7 @@
                 });
             });
 
-            $('body').on('change', '#schedule_id', function() {
+            $('body').on('change', '#schedule_id', function () {
                 let id = $(this).val();
                 let url = "{{ route('technician.get.schedule.by.id', ':id') }}".replace(':id', id) +
                     "?type=" + type;
@@ -839,10 +844,10 @@
                     url: url,
                     type: 'GET',
                     dataType: 'json',
-                    beforeSend: function() {
+                    beforeSend: function () {
                         $('#loader').show();
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status === 'success') {
                             $('#addAssetModal #asset_no').val(response.data.asset_no);
                             $('#description').val(response.data.description);
@@ -856,7 +861,7 @@
                             $('.email_wrapper').removeClass('d-none');
                             if (response.data.asset.asset_emails.length > 0) {
                                 let emails = [];
-                                response.data.asset.asset_emails.forEach(function(item) {
+                                response.data.asset.asset_emails.forEach(function (item) {
                                     if (item.email && item.email.email) {
                                         emails.push(item.email.email);
                                     }
@@ -868,7 +873,7 @@
                             notify('error', response.message);
                         }
                     },
-                    complete: function() {
+                    complete: function () {
                         $('#loader').hide();
                     }
                 });
