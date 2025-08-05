@@ -21,7 +21,7 @@
                     <div class="row align-items-center">
                         <!-- Left Side: Buttons -->
                         <div class="col-12 col-md-3 mb-2 mb-md-0">
-                            <div class="d-flex flex-wrap gap-2">
+                            <div class="d-flex flex-wrap gap-1">
                                 @if (auth()->user()->hasRole('technician'))
                                     <button class="btn btn-sm btn-primary" id="loadTodayWorks">
                                         <i class="ri-refresh-line align-bottom"></i>
@@ -32,6 +32,13 @@
                                     <button class="btn btn-sm btn-secondary" id="addAsset">
                                         <i class="ri-add-line align-bottom"></i>
                                         Add Asset
+                                    </button>
+                                @endif
+                                @if(auth()->user()->hasRole('admin'))
+                                    <button class="btn btn-sm btn-success" data-bs-toggle="modal"
+                                            data-bs-target="#importAssetFormWorkOrder">
+                                        <i class="ri-file-excel-2-fill align-bottom"></i>
+                                        Add Asset from Workorder
                                     </button>
                                 @endif
                                 <div>
@@ -290,6 +297,35 @@
         <!-- modal-dialog -->
     </div>
     <!-- Asset Delete Modal End -->
+
+    <!-- Default Modals -->
+    <div id="importAssetFormWorkOrder" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-light py-2">
+                    <h5 class="modal-title" id="myModalLabel">Import Assets from Workorder</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{route('import.assets.from.workorder')}}" method="POST" enctype="multipart/form-data" id="importAssetFrommWorkOrderForm">
+                    @csrf
+                    <input type="hidden" name="type" value="{{request()->query('type')}}">
+                    <div class="modal-body">
+                        <div class="mb-2">
+                            <label for="workorder_file" class="form-label">Workorder File <span
+                                    class="text-danger">*</span></label>
+                            <input type="file" name="workorder_file" id="workorder_file" class="form-control"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-secondary" id="importAssetSubmitBtn">Import</button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 @endsection
 @section('vendor-style')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/cdn/datatables/dataTables.bootstrap5.min.css') }}">
@@ -878,6 +914,58 @@
                     }
                 });
             })
+
+            $('#importAssetFrommWorkOrderForm').on('submit', function (e) {
+                e.preventDefault();
+                let formData = new FormData(this);
+                let url = $(this).attr('action');
+                let method = $(this).attr('method');
+                $.ajax({
+                    url: url,
+                    method: method,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $('#importAssetSubmitBtn').attr('disabled', true);
+                        $('#importAssetSubmitBtn').html(
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...'
+                        );
+                    },
+                    success: function (response) {
+                        if (response.status == 'success') {
+                            table.ajax.reload();
+                            notify('success', response.message);
+                            $('#importAssetFormWorkOrder').modal('hide');
+                            $('#importAssetFrommWorkOrderForm')[0].reset();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        if (xhr.status == 422) {
+                            let errors = xhr.responseJSON.errors;
+                            $.each(errors, function (key, value) {
+                                notify('error', value);
+                                let input = $('[name="' + key + '"]');
+                                input.addClass('is-invalid');
+                                input.next('.invalid-feedback').text(value);
+                            });
+                        } else {
+                            notify('error',
+                                'Something went wrong on our end. Please try again later.');
+                        }
+
+                    },
+                    complete: function () {
+                        $('#importAssetSubmitBtn').attr('disabled', false);
+                        $('#importAssetSubmitBtn').html('Import');
+                    }
+                });
+            });
+
+            $('#importAssetFormWorkOrder').on('hidden.bs.modal', function () {
+                $('#importAssetFrommWorkOrderForm')[0].reset();
+                $('#importAssetFrommWorkOrderForm').find('.is-invalid').removeClass('is-invalid');
+            });
         });
     </script>
 @endsection

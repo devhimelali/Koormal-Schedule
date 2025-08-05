@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\AssetFromWorkOrderImport;
 use Carbon\Carbon;
 use App\Models\EmailLog;
 use App\Models\PumpSchedule;
@@ -16,6 +17,7 @@ use App\Models\LightingTowerSchedule;
 use App\Models\ForkliftManitouSchedule;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TechniciansController extends Controller
 {
@@ -393,6 +395,20 @@ class TechniciansController extends Controller
         ]);
     }
 
+    public function importAssetsFromWorkOrder(Request $request)
+    {
+        $request->validate([
+            'type' => 'required|in:lv,lt,tk,fm,pm',
+            'workorder_file' => 'required|file|mimes:csv,txt,xlsx'
+        ]);
+
+        Excel::import(new AssetFromWorkOrderImport($request->type), $request->file('workorder_file'));
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Assets imported successfully.'
+        ]);
+    }
     protected function getScheduleModel($type): string
     {
         return match ($type) {

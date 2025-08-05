@@ -54,6 +54,7 @@ Route::middleware(['auth', 'verified', 'role:admin|user|technician'])->group(fun
     Route::get('edit-asset/{id}', [TechniciansController::class, 'editAsset'])->name('technician.edit.asset');
     Route::put('update-asset/{id}', [TechniciansController::class, 'updateAsset'])->name('technician.update.asset');
     Route::delete('delete-asset/{id}', [TechniciansController::class, 'deleteAsset'])->name('technician.delete.asset');
+    Route::post('import-assets-from-work-order', [TechniciansController::class, 'importAssetsFromWorkOrder'])->name('import.assets.from.workorder');
 });
 
 Route::post('technicians/change-status', [TechniciansController::class, 'changeStatus'])->name('technicians.change.status')->middleware(['auth', 'role:admin|technician', 'verified']);
