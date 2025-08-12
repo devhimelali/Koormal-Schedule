@@ -307,7 +307,8 @@
                     <h5 class="modal-title" id="myModalLabel">Import Assets from Workorder</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{route('import.assets.from.workorder')}}" method="POST" enctype="multipart/form-data" id="importAssetFrommWorkOrderForm">
+                <form action="{{route('import.assets.from.workorder')}}" method="POST" enctype="multipart/form-data"
+                      id="importAssetFrommWorkOrderForm">
                     @csrf
                     <input type="hidden" name="type" value="{{request()->query('type')}}">
                     <div class="modal-body">
@@ -966,6 +967,22 @@
                 $('#importAssetFrommWorkOrderForm')[0].reset();
                 $('#importAssetFrommWorkOrderForm').find('.is-invalid').removeClass('is-invalid');
             });
+
+            setInterval(() => {
+                fetch('/keep-alive', {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                    }
+                }).then(response => {
+                    if (!response.ok) {
+                        console.log('Session might be expired');
+                    }
+                }).catch(() => {
+                    console.log('Could not ping server');
+                });
+            }, 5 * 60 * 1000);
         });
     </script>
 @endsection

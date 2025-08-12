@@ -79,3 +79,6 @@ Route::middleware(['auth', 'role:admin', 'verified'])->group(function () {
 });
 
 Route::post('ckeditor.upload', [ScheduleController::class, 'ckeditorUpload'])->name('ckeditor.upload')->middleware('auth:sanctum');
+Route::get('/keep-alive', function () {
+    return response()->json(['status' => 'alive']);
+})->middleware('auth');
