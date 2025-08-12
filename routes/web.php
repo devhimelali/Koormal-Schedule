@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\admin\AssetStatusLogController;
 use App\Http\Controllers\admin\EmailLogController;
+use App\Http\Controllers\ManualController;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -55,6 +56,8 @@ Route::middleware(['auth', 'verified', 'role:admin|user|technician'])->group(fun
     Route::put('update-asset/{id}', [TechniciansController::class, 'updateAsset'])->name('technician.update.asset');
     Route::delete('delete-asset/{id}', [TechniciansController::class, 'deleteAsset'])->name('technician.delete.asset');
     Route::post('import-assets-from-work-order', [TechniciansController::class, 'importAssetsFromWorkOrder'])->name('import.assets.from.workorder');
+    Route::get('manuals', [ManualController::class, 'index'])->name('manuals.index');
+    Route::get('manuals/{manual}', [ManualController::class, 'show'])->name('manuals.show');
 });
 
 Route::post('technicians/change-status', [TechniciansController::class, 'changeStatus'])->name('technicians.change.status')->middleware(['auth', 'role:admin|technician', 'verified']);
