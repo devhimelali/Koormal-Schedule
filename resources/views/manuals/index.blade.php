@@ -82,8 +82,8 @@
                         name: 'name'
                     },
                     {
-                        data: 'category_name',
-                        name: 'category_name'
+                        data: 'category.name',
+                        name: 'category.name'
                     },
                     {
                         data: "created_at",

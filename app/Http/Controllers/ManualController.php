@@ -18,14 +18,6 @@ class ManualController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->editColumn('category_name', function ($row) {
-                    return $row->category->name;
-                })
-                ->filterColumn('category_name', function ($query, $keyword) {
-                    $query->whereHas('category', function ($q) use ($keyword) {
-                        $q->where('name', 'like', "%{$keyword}%");
-                    });
-                })
                 ->editColumn('created_at', function ($row) {
                     return Carbon::parse($row->created_at)->format('d-m-Y');
                 })

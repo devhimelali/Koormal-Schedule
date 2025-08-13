@@ -121,6 +121,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('manuals.index') }}"
+                       class="nav-link menu-link @if (Route::current()->getName() == 'manuals.index') active @endif"
+                       aria-expanded="false">
+                        <i class="ph ph-notebook"></i>
+                        <span data-key="t-manuals">Manuals</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('koormal.contact') }}"
                         class="nav-link menu-link @if (Route::current()->getName() == 'koormal.contact') active @endif"
                         aria-expanded="false">
