@@ -58,6 +58,7 @@ Route::middleware(['auth', 'verified', 'role:admin|user|technician'])->group(fun
     Route::post('import-assets-from-work-order', [TechniciansController::class, 'importAssetsFromWorkOrder'])->name('import.assets.from.workorder');
     Route::get('manuals', [ManualController::class, 'index'])->name('manuals.index');
     Route::get('manuals/{manual}', [ManualController::class, 'show'])->name('manuals.show');
+    Route::get('download-pdf/{path}', [ManualController::class, 'downloadPdf'])->name('manuals.download.pdf');
 });
 
 Route::post('technicians/change-status', [TechniciansController::class, 'changeStatus'])->name('technicians.change.status')->middleware(['auth', 'role:admin|technician', 'verified']);
