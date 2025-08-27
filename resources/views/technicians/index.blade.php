@@ -21,19 +21,26 @@
                     <div class="row align-items-center">
                         <!-- Left Side: Buttons -->
                         <div class="col-12 col-md-3 mb-2 mb-md-0">
-                            <div class="d-flex flex-wrap gap-1">
-                                @if (auth()->user()->hasRole('technician'))
-                                    <button class="btn btn-sm btn-primary" id="loadTodayWorks">
-                                        <i class="ri-refresh-line align-bottom"></i>
-                                        Today's Work
-                                    </button>
-                                @endif
+                            <div
+                                class="d-flex flex-wrap gap-1">
                                 @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('technician'))
                                     <button class="btn btn-sm btn-secondary" id="addAsset">
                                         <i class="ri-add-line align-bottom"></i>
                                         Add Asset
                                     </button>
                                 @endif
+                                @if (auth()->user()->hasRole('technician'))
+                                    <button class="btn btn-sm btn-primary" id="loadTodayWorks">
+                                        <i class="ri-refresh-line align-bottom"></i>
+                                        Today's Work
+                                    </button>
+                                    <button class="btn btn-sm" style="background-color: #FF00FF; color: #fff;"
+                                            id="reportNoShowsBtn">
+                                        <i class="ri-bar-chart-2-line align-bottom"></i>
+                                        Report NO SHOWS
+                                    </button>
+                                @endif
+
                                 @if(auth()->user()->hasRole('admin'))
                                     <button class="btn btn-sm btn-success" data-bs-toggle="modal"
                                             data-bs-target="#importAssetFormWorkOrder">
@@ -966,6 +973,29 @@
             $('#importAssetFormWorkOrder').on('hidden.bs.modal', function () {
                 $('#importAssetFrommWorkOrderForm')[0].reset();
                 $('#importAssetFrommWorkOrderForm').find('.is-invalid').removeClass('is-invalid');
+            });
+
+            $('#reportNoShowsBtn').on('click', function (){
+                $.ajax({
+                    url: "{{route('send-email-for-no-shows')}}",
+                    method: 'GET',
+                    data:{
+                        type: type
+                    },
+                    beforeSend: function () {
+                        $('#loader').show();
+                    },
+                    success: function (response) {
+                        notify('success', response.message);
+                    },
+
+                    error: function (xhr, status, error) {
+                        notify('error', 'Something went wrong on our end. Please try again later.');
+                    },
+                    complete: function () {
+                        $('#loader').hide();
+                    }
+                })
             });
 
             setInterval(() => {

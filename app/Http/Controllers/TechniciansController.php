@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Imports\AssetFromWorkOrderImport;
+use App\Mail\NoShowReportMail;
+use App\Models\Department;
 use Carbon\Carbon;
 use App\Models\EmailLog;
 use App\Models\PumpSchedule;
@@ -409,6 +411,35 @@ class TechniciansController extends Controller
             'message' => 'Assets imported successfully.'
         ]);
     }
+
+    public function sendEmailForNoShows(Request $request)
+    {
+        $model = $this->getScheduleModel($request->type);
+
+        $notShows = $model::with('asset.assetEmails.email')
+            ->where('is_today_works', 1)
+            ->where('status', 'no show')
+            ->get();
+
+        foreach ($notShows as $notShow) {
+            $emails = $notShow->asset->assetEmails->pluck('email.email')->toArray();
+            $departments = Department::where('name', $notShow->department)->get();
+
+            if ($departments->isNotEmpty()) {
+                foreach ($departments as $department) {
+                    Mail::to($department->email)
+                        ->cc($emails)
+                        ->send(new NoShowReportMail($department, $notShow));
+                }
+            }
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'No-shows emails sent successfully.'
+        ]);
+    }
+
     protected function getScheduleModel($type): string
     {
         return match ($type) {

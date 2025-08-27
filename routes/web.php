@@ -86,3 +86,5 @@ Route::post('ckeditor.upload', [ScheduleController::class, 'ckeditorUpload'])->n
 Route::get('/keep-alive', function () {
     return response()->json(['status' => 'alive']);
 })->middleware('auth');
+
+Route::get('send-email-for-no-shows', [TechniciansController::class, 'sendEmailForNoShows'])->name('send-email-for-no-shows')->middleware('auth');
