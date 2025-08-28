@@ -128,6 +128,10 @@
                     searchable: false
                 }
             ],
+            order: [
+                [5, 'desc'],
+                [4, 'desc']
+            ]
         });
 
         $(document).on('click', '.view-details', function() {

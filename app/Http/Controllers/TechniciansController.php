@@ -427,9 +427,51 @@ class TechniciansController extends Controller
 
             if ($departments->isNotEmpty()) {
                 foreach ($departments as $department) {
-                    Mail::to($department->email)
-                        ->cc($emails)
-                        ->send(new NoShowReportMail($department, $notShow));
+                    $body = '
+                        <p>Dear '.$department->name.',</p>
+                        <p>
+                            The following Safety Inspection schedule was missed today -
+                            <strong>'.$notShow->asset_no.'</strong> '.
+                        $notShow->description.' <strong>'.$notShow->next_due_date.'</strong>
+                        </p>
+                        <p>
+                            The vehicle is now non compliant with site safety requirements and may be unsafe for use.
+                        </p>
+                    ';
+
+                    try {
+                        Mail::to($department->email)
+                            ->cc($emails)
+                            ->send(new NoShowReportMail($department, $notShow));
+
+                        EmailLog::create([
+                            'asset_no' => $notShow->asset_no,
+                            'department' => $notShow->department,
+                            'description' => $notShow->description,
+                            'next_due_date' => $notShow->next_due_date ?? null,
+                            'sent_date' => Carbon::now()->timezone(config('app.timezone'))->format('d-m-Y'),
+                            'sent_time' => Carbon::now()->timezone(config('app.timezone'))->format('H:i:s'),
+                            'email_body' => $body,
+                            'is_sent' => true,
+                            'recipient_email' => $department->email,
+                            'email_subject' => $notShow->asset_no.' '.$notShow->description.' '.$notShow->next_due_date,
+                            'asset_type' => $request->type
+                        ]);
+                    } catch (\Exception $e) {
+                        EmailLog::create([
+                            'asset_no' => $notShow->asset_no,
+                            'department' => $notShow->department,
+                            'description' => $notShow->description,
+                            'next_due_date' => $notShow->next_due_date ?? null,
+                            'sent_date' => Carbon::now()->timezone(config('app.timezone'))->format('d-m-Y'),
+                            'sent_time' => Carbon::now()->timezone(config('app.timezone'))->format('H:i:s'),
+                            'email_body' => $body,
+                            'is_sent' => false,
+                            'recipient_email' => $department->email,
+                            'email_subject' => $notShow->asset_no.' '.$notShow->description.' '.$notShow->next_due_date,
+                            'asset_type' => $request->type
+                        ]);
+                    }
                 }
             }
         }
